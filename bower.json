@@ -1,0 +1,8 @@
+{
+  "name": "app",
+  "dependencies": {
+    "datatables.net": "^1.11.3",
+    "datatables.net-bs4": "^1.11.3",
+    "bootstrap": "4.3.1"
+  }
+}
