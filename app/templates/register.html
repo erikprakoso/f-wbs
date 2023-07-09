@@ -29,41 +29,54 @@
                                             src="{{ url_for('static', filename='assets/images/logo/logo.png') }}">
                                         <h2 class="m-b-0">Sign Up</h2>
                                     </div>
-                                    <form>
+                                    {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                    <div class="alert alert-primary">
+                                        {% for message in messages %}
+                                        {{ message|safe }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    <form action="{{ url_for('auth.register') }}" method="POST">
                                         <div class="form-group">
                                             <label class="font-weight-semibold" for="email">Email:</label>
-                                            <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan Email Anda!">
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                placeholder="Masukkan Email Anda!">
                                         </div>
                                         <div class="form-group">
                                             <label class="font-weight-semibold" for="name">Nama:</label>
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan Nama Anda!">
+                                            <input type="text" class="form-control" id="name" name="name"
+                                                placeholder="Masukkan Nama Anda!">
                                         </div>
                                         <div class="form-group">
                                             <label class="font-weight-semibold" for="age">Umur:</label>
-                                            <input type="number" class="form-control" id="age" name="age" placeholder="Masukkan Umur Anda!">
+                                            <input type="number" class="form-control" id="age" name="age"
+                                                placeholder="Masukkan Umur Anda!">
                                         </div>
                                         <div class="form-group">
                                             <label class="font-weight-semibold" for="institute">Instansi:</label>
-                                            <input type="text" class="form-control" id="institute" name="institute" placeholder="Universitas/Perusahaan">
+                                            <input type="text" class="form-control" id="institute" name="institute"
+                                                placeholder="Universitas/Perusahaan">
                                         </div>
                                         <div class="form-group">
                                             <label class="font-weight-semibold" for="password">Password:</label>
-                                            <input type="text" class="form-control" id="password"
+                                            <input type="password" class="form-control" id="password" name="password"
                                                 placeholder="Masukkan Password Anda!">
                                         </div>
                                         <div class="form-group">
                                             <label class="font-weight-semibold" for="confirmPassword">Re-Enter
                                                 Password:</label>
                                             <input type="password" class="form-control" id="confirmPassword"
-                                                placeholder="Masukkan Kembali Password Anda!">
+                                                name="confirmPassword" placeholder="Masukkan Kembali Password Anda!">
                                         </div>
                                         <div class="form-group">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <span class="font-size-13 text-muted">
-                                                    Already have an account? 
+                                                    Already have an account?
                                                     <a class="small" href="{{ url_for('auth.login') }}"> Sign In</a>
                                                 </span>
-                                                <button class="btn btn-primary">Sign Up</button>
+                                                <button type="submit" class="btn btn-primary">Sign Up</button>
                                             </div>
                                         </div>
                                     </form>

@@ -16,3 +16,12 @@ class User(db.Model):
         self.age = age
         self.institute = institute
         self.password = password
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
