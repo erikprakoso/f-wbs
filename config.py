@@ -9,7 +9,7 @@ class Config:
     MYSQL_PORT = 3306
     MYSQL_USER = 'root'
     MYSQL_PASSWORD = ''
-    MYSQL_DB = 'db_wbs_bim_revit'
+    MYSQL_DB = 'db_f_wbs_revit'
 
     # Other configuration options
     SECRET_KEY = 'your_secret_key'
