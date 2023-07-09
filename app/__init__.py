@@ -17,7 +17,7 @@ def create_app(config_class=Config):
 
     # Create an instance of Migrate and associate it with your Flask application and database
     migrate = Migrate()
-    migrate.init_app(app, db, directory='app/migrations')
+    migrate.init_app(app, db, directory='app//models/migrations')
 
     # Register blueprints
     from app.routes.auth import auth_bp
