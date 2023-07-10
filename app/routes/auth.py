@@ -7,7 +7,24 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    # Login functionality implementation
+    if 'email' in session:
+        return redirect(url_for('home.index'))
+    if request.method == 'POST':
+        email = request.form['email']
+        print("email", email)
+        password = request.form['password']
+        print("password", password)
+
+        user = User.query.filter_by(email=email).first()
+
+        if user and user.password == password:
+            session['email'] = email
+            flash('Login successful!', 'success')
+            return redirect(url_for('home.index'))
+
+        flash('Incorrect email or password. Please try again.', 'error')
+        return render_template('login.html')
+
     return render_template('login.html')
 
 
@@ -40,5 +57,5 @@ def register():
 
 @auth_bp.route('/logout')
 def logout():
-    # Logout functionality implementation
-    return render_template('logout.html')
+    session.pop('email', None)  # Menghapus session 'email'
+    return redirect(url_for('auth.login')) 
