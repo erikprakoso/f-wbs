@@ -27,25 +27,35 @@
                                     <div class="d-flex align-items-center justify-content-between m-b-30">
                                         <img class="img-fluid" alt=""
                                             src="{{ url_for('static', filename='assets/images/logo/logo.png') }}">
-                                        <h2 class="m-b-0">Sign in</h2>
+                                        <h2 class="m-b-0">Sign In</h2>
                                     </div>
-                                    <form>
+                                    {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                    <div class="alert alert-primary">
+                                        {% for message in messages %}
+                                        {{ message|safe }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    <form action="{{ url_for('auth.login') }}" method="POST">
                                         <div class="form-group">
-                                            <label class="font-weight-semibold" for="email">E-mail:</label>
-                                            <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan Email Anda!">
+                                            <label class="font-weight-semibold" for="email">Email:</label>
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                placeholder="Masukkan Email Anda!">
                                         </div>
-                                        <div class="form-group">
+                                       <div class="form-group">
                                             <label class="font-weight-semibold" for="password">Password:</label>
-                                            <input type="password" class="form-control" id="password"
-                                                placeholder="Masukkan Password!">
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                placeholder="Masukkan Password Anda!">
                                         </div>
                                         <div class="form-group">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <span class="font-size-13 text-muted">
-                                                    Don't have an account? 
+                                                    Don't have account?
                                                     <a class="small" href="{{ url_for('auth.register') }}"> Sign Up</a>
                                                 </span>
-                                                <button class="btn btn-primary">Sign In</button>
+                                                <button type="submit" class="btn btn-primary">Sign In</button>
                                             </div>
                                         </div>
                                     </form>
