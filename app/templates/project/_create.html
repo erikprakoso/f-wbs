@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Page Container START -->
+<div class="page-container">
+
+    <!-- Content Wrapper START -->
+    <div class="main-content">
+        <div class="page-header">
+            <h2 class="header-title">Project</h2>
+            <div class="header-sub-title">
+                <nav class="breadcrumb breadcrumb-dash">
+                    <a href="{{ url_for('project.index') }}" class="breadcrumb-item"><i
+                            class="anticon anticon-home m-r-5"></i>Project</a>
+                    <a class="breadcrumb-item active" href="{{ url_for('project.create') }}">Create</a>
+                </nav>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4>Project</h4>
+                <p></p>
+                <div class="m-t-25">
+                    <form id="projectForm" enctype="multipart/form-data">
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputName" name="inputName"
+                                    placeholder="Name">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputType" class="col-sm-2 col-form-label">Type</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputType" name="inputType"
+                                    placeholder="Type">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputLocation" class="col-sm-2 col-form-label">Location</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputLocation" name="inputLocation"
+                                    placeholder="Location">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputStartDate" class="col-sm-2 col-form-label">Start Date</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="inputStartDate" name="inputStartDate"
+                                    placeholder="Start Date">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEndDate" class="col-sm-2 col-form-label">End Date</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="inputEndDate" name="inputEndDate"
+                                    placeholder="End Date">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputUploadRevit" class="col-sm-2 col-form-label">Upload Revit</label>
+                            <div class="col-sm-10">
+                                <input type="file" class="form-control" id="inputUploadRevit" name="inputUploadRevit"
+                                    placeholder="Upload Revit">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputUploadExcel" class="col-sm-2 col-form-label">Upload Excel</label>
+                            <div class="col-sm-10">
+                                <input type="file" class="form-control" id="inputUploadExcel" name="inputUploadExcel"
+                                    placeholder="Upload Excel">
+                            </div>
+                        </div>
+                        <div id="sheetNamesContainer">
+                            <div class="form-group row">
+                                <label for="inputSheetName" class="col-sm-2 col-form-label">Sheet Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="inputSheetName[]"
+                                        placeholder="Sheet Name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <button type="button" class="btn btn-primary" onclick="addSheetNameInput()">Add Sheet
+                                    Name</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card-footer text-left">
+                <button type="button" class="btn btn-primary" onclick="saveProject()">Save</button>
+            </div>
+        </div>
+    </div>
+    <!-- Content Wrapper END -->
+
+    <script>
+        function addSheetNameInput() {
+            const container = document.getElementById('sheetNamesContainer');
+            const inputGroup = document.createElement('div');
+            inputGroup.classList.add('form-group', 'row');
+
+            const colDiv = document.createElement('div');
+            colDiv.classList.add('col-sm-10', 'offset-sm-2');
+
+            const input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.classList.add('form-control');
+            input.setAttribute('name', 'inputSheetName[]');
+            input.setAttribute('placeholder', 'Sheet Name');
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function () {
+                inputGroup.remove();
+            });
+
+            colDiv.appendChild(input);
+            colDiv.appendChild(deleteButton);
+            inputGroup.appendChild(colDiv);
+            container.appendChild(inputGroup);
+        }
+
+        function saveProject() {
+            const form = document.getElementById('projectForm');
+            const formData = new FormData(form);
+
+            // Disabling the "Save" button
+            const saveButton = document.querySelector('.card-footer button');
+            saveButton.disabled = true;
+            saveButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ url_for("project.store") }}');
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // Response handling logic here
+                    console.log(xhr.responseText);
+
+                    // Re-enable the "Save" button
+                    saveButton.disabled = false;
+                    saveButton.innerHTML = 'Save';
+
+                    // Show success message or alert
+                    alert('Data stored successfully.');
+
+                    // Reload the page
+                    window.location.reload();
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
+    {% endblock %}
