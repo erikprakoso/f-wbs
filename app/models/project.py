@@ -9,4 +9,5 @@ class Project(db.Model):
     end_date = db.Column(db.Date)
     revit_file = db.Column(db.String(255))
     excel_file = db.Column(db.String(255))
+    photo_file = db.Column(db.String(255))
     sheet_names = db.relationship('SheetName', backref='project', lazy=True)

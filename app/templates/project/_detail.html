@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Project</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="{{ url_for('project.index') }}" class="breadcrumb-item"><i
+                        class="anticon anticon-home m-r-5"></i>Project</a>
+                <a class="breadcrumb-item active" href="{{ url_for('project.detail', id=project.id) }}">Detail</a>
+            </nav>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-6 d-flex">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div class="media align-items-center">
+                                <div class="avatar avatar-image rounded">
+                                    <i class="anticon anticon-file-image font-size-15 text-primary"></i>
+                                </div>
+                                <div class="m-l-10">
+                                    <h4 class="m-b-0">{{ project.name }}</h4>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('project.edit', id=project.id) }}" class="badge badge-blue" style="font-size: 15px;"
+                                    title="Edit"><i class="anticon anticon-edit"></i></a>
+                                <a href="{{ url_for('project.delete', id=project.id) }}" class="badge badge-red" style="font-size: 15px;"
+                                    title="Delete"><i class="anticon anticon-delete"></i></a>
+                            </div>
+                        </div>
+                        <div class="m-t-40">
+                            <h6>Type:</h6>
+                            <p>{{ project.type }}</p>
+                        </div>
+                        <div class="m-t-10">
+                            <h6>Location:</h6>
+                            <p>{{ project.location }}</p>
+                        </div>
+                        <div class="m-t-10">
+                            <h6>Date:</h6>
+                            <p>{{ project.start_date }} - {{ project.end_date }}</p>
+                        </div>
+                    </div>
+                    <div class="m-t-5">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#project-details-attachment">Attachment</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content m-t-15 p-25">
+                            <div class="tab-pane fade show active" id="project-details-attachment">
+                                <div class="file" style="min-width: 200px;">
+                                    <div class="media align-items-center">
+                                        <div class="avatar avatar-icon avatar-cyan rounded m-r-15">
+                                            <i class="anticon anticon-file-exclamation font-size-20"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Mockup.zip</h6>
+                                            <span class="font-size-13 text-muted">7MB</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="file" style="min-width: 200px;">
+                                    <div class="media align-items-center">
+                                        <div class="avatar avatar-icon avatar-blue rounded m-r-15">
+                                            <i class="anticon anticon-file-word font-size-20"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Guideline.doc</h6>
+                                            <span class="font-size-13 text-muted">128 KB</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="file" style="min-width: 200px;">
+                                    <div class="media align-items-center">
+                                        <div class="avatar avatar-icon avatar-gold rounded m-r-15">
+                                            <i class="anticon anticon-file-image font-size-20"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Logo.png</h6>
+                                            <span class="font-size-13 text-muted">128 KB</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Content Wrapper END -->
+
+{% endblock %}

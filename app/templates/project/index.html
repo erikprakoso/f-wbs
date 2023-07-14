@@ -1,41 +1,67 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Page Container START -->
-<div class="page-container">
-
-
-    <!-- Content Wrapper START -->
-    <div class="main-content">
-        <div class="page-header">
-            <h2 class="header-title">Project</h2>
-            <div class="header-sub-title">
-                <nav class="breadcrumb breadcrumb-dash">
-                    <a href="{{ url_for('project.index') }}" class="breadcrumb-item active"><i class="anticon anticon-home m-r-5"></i>Project</a>
-                    <div class="dropdown" style="position: absolute; top: 0; right: 0;">
-                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-ellipsis-v"></i> 
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Option 1</a>
-                            <a class="dropdown-item" href="#">Option 2</a>
-                            <a class="dropdown-item" href="#">Option 3</a>
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Project</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="{{ url_for('project.index') }}" class="breadcrumb-item"><i
+                        class="anticon anticon-home m-r-5"></i>Project</a>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-11 mx-auto">
+            <div class="page-actions m-b-10">
+                <a href="{{ url_for('project.create') }}" class="btn btn-primary">Create Project</a>
+            </div>
+            <div class="row">
+                {% for project in projects %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="card-img-top"
+                            src="{{ url_for('static', filename='uploads/' + project.photo_file) }}" alt="">
+                        <div class="card-body">
+                            <h4 class="m-t-10">{{ project.name }}</h4>
+                            <p class="m-b-20">{{ project.type }}
+                            <p class="m-b-20">{{ project.location }}
+                            <div class="d-flex align-items-center justify-content-between">
+                                <p class="m-b-0 text-dark font-weight-semibold font-size-15">
+                                    {{ project.start_date }} - {{ project.end_date }}
+                                    <a class="text-primary btn btn-sm btn-hover" href="{{ url_for('project.detail', id=project.id) }}">
+                                        <span>Read More</span>
+                                    </a>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex align-items-center m-t-5">
+                                <div class="avatar avatar-image avatar-sm">
+                                    <img src="assets/images/avatars/thumb-2.jpg" alt="">
+                                </div>
+                                <div class="m-l-10">
+                                    <span class="font-weight-semibold">Darryl Day</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </nav>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h4>Project</h4>
-                <p></p>
-                <div class="m-t-25">
-                    <a href="{{ url_for('project.create') }}">
-                        <button class="btn btn-primary">Create Project</button>
-                    </a>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <!-- Content Wrapper END -->
+    <div class="m-t-30">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- Content Wrapper END -->
 {% endblock %}
