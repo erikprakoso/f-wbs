@@ -22,7 +22,9 @@ def create_app(config_class=Config):
     # Register blueprints
     from app.routes.auth import auth_bp
     from app.routes.project import project_bp
+    from app.routes.sheet_name import sheet_name_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(project_bp)
+    app.register_blueprint(sheet_name_bp)
 
     return app

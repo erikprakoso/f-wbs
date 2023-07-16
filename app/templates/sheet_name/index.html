@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Sheet Name</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="{{ url_for('sheet_name.sheets') }}" class="breadcrumb-item"><i
+                        class="anticon anticon-home m-r-5"></i>Sheet Name</a>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h4>Sheet Name</h4>
+                <div class="dropdown dropdown-animated scale-left">
+                    <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
+                        <i class="anticon anticon-ellipsis"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createModal">
+                            <i class="anticon anticon-plus"></i>
+                            <span class="m-l-10">Create</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="m-t-25">
+                <table id="data-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sheet in sheets %}
+                        <tr>
+                            <td>
+                                {{ sheet.id }}
+                            </td>
+                            <td>
+                                {{ sheet.name }}
+                            </td>
+                            <td>
+                                <a href="#" class="badge badge-blue btn-edit-sheet" data-toggle="modal"
+                                    data-target="#editModal" data-sheet-id="{{ sheet.id }}"
+                                    data-sheet-name="{{ sheet.name }}" style="font-size: 15px;" title="Edit">
+                                    <i class="anticon anticon-edit"></i>
+                                </a>
+                                <a href="#" class="badge badge-red btn-delete-sheet" style="font-size: 15px;"
+                                    title="Delete" data-sheet-id="{{ sheet.id }}">
+                                    <i class="anticon anticon-delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                No
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Content Wrapper END -->
+<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ url_for('sheet_name.store') }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalTitle">Create</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="sheet_name" name="sheet_name" placeholder="Sheet Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="editForm" action="" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalTitle">Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="sheet_name_edit" name="sheet_name_edit"
+                        placeholder="Sheet Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Bower JS -->
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script>
+    // Fungsi untuk mengirimkan request AJAX ketika tombol delete diklik
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.btn-delete-sheet');
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const sheetId = button.getAttribute('data-sheet-id');
+
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/sheet/delete/${sheetId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
+
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('sheet_name.sheets') }}';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
+
+<script>
+    function updateSheetName(sheetId, updatedName) {
+        const formData = new FormData();
+        formData.append('sheet_name_edit', updatedName);
+
+        fetch(`/sheet/update/${sheetId}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            alert(data.message);
+            if (data.message === 'Data updated successfully.') {
+                // Reload the table after updating the sheet name
+                fetchSheetNames();
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    function fetchSheetNames() {
+        fetch('{{ url_for("sheet_name.sheets") }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            // Update the table body with the new data
+            document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Function to display the edit modal with the selected sheet name data
+    function displayEditModal(sheetId, sheetName) {
+        const editModalTitle = document.getElementById('editModalTitle');
+        const sheetNameInput = document.getElementById('sheet_name_edit');
+        const editForm = document.getElementById('editForm');
+
+        // Set the modal title
+        editModalTitle.innerHTML = 'Edit Sheet Name';
+
+        // Set the sheet name data to the input field
+        sheetNameInput.value = sheetName;
+
+        // Update the form action to include the sheet ID for submission
+        editForm.action = `/sheet/update/${sheetId}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const editButtons = document.querySelectorAll('.btn-edit-sheet');
+
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const sheetId = button.getAttribute('data-sheet-id');
+                const sheetName = button.getAttribute('data-sheet-name');
+
+                // Display the edit modal with the selected sheet name data
+                displayEditModal(sheetId, sheetName);
+            });
+        });
+    });
+</script>
+
+{% endblock %}

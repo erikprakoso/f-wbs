@@ -10,4 +10,6 @@ class Project(db.Model):
     revit_file = db.Column(db.String(255))
     excel_file = db.Column(db.String(255))
     photo_file = db.Column(db.String(255))
-    sheet_names = db.relationship('SheetName', backref='project', lazy=True)
+    revit_file_size = db.Column(db.String(10))
+    excel_file_size = db.Column(db.String(10))
+    photo_file_size = db.Column(db.String(10))

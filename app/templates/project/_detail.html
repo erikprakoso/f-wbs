@@ -15,7 +15,7 @@
     </div>
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-6 d-flex">
+            <div class="col-md-8 d-flex">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
@@ -28,10 +28,12 @@
                                 </div>
                             </div>
                             <div>
-                                <a href="{{ url_for('project.edit', id=project.id) }}" class="badge badge-blue" style="font-size: 15px;"
-                                    title="Edit"><i class="anticon anticon-edit"></i></a>
-                                <a href="{{ url_for('project.delete', id=project.id) }}" class="badge badge-red" style="font-size: 15px;"
-                                    title="Delete"><i class="anticon anticon-delete"></i></a>
+                                <a href="{{ url_for('project.edit', id=project.id) }}" class="badge badge-blue"
+                                    style="font-size: 15px;" title="Edit"><i class="anticon anticon-edit"></i></a>
+                                <a href="#" class="badge badge-red btn-delete-project" style="font-size: 15px;"
+                                    title="Delete" data-project-id="{{ project.id }}">
+                                    <i class="anticon anticon-delete"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="m-t-40">
@@ -58,33 +60,33 @@
                                 <div class="file" style="min-width: 200px;">
                                     <div class="media align-items-center">
                                         <div class="avatar avatar-icon avatar-cyan rounded m-r-15">
-                                            <i class="anticon anticon-file-exclamation font-size-20"></i>
+                                            <i class="anticon anticon-file-image font-size-20"></i>
                                         </div>
                                         <div>
-                                            <h6 class="mb-0">Mockup.zip</h6>
-                                            <span class="font-size-13 text-muted">7MB</span>
+                                            <h6 class="mb-0">{{ project.photo_file }}</h6>
+                                            <span class="font-size-13 text-muted">{{ project.photo_file_size }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="file" style="min-width: 200px;">
                                     <div class="media align-items-center">
                                         <div class="avatar avatar-icon avatar-blue rounded m-r-15">
-                                            <i class="anticon anticon-file-word font-size-20"></i>
+                                            <i class="anticon anticon-file-add font-size-20"></i>
                                         </div>
                                         <div>
-                                            <h6 class="mb-0">Guideline.doc</h6>
-                                            <span class="font-size-13 text-muted">128 KB</span>
+                                            <h6 class="mb-0">{{ project.revit_file }}</h6>
+                                            <span class="font-size-13 text-muted">{{ project.revit_file_size }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="file" style="min-width: 200px;">
                                     <div class="media align-items-center">
                                         <div class="avatar avatar-icon avatar-gold rounded m-r-15">
-                                            <i class="anticon anticon-file-image font-size-20"></i>
+                                            <i class="anticon anticon-file-excel font-size-20"></i>
                                         </div>
                                         <div>
-                                            <h6 class="mb-0">Logo.png</h6>
-                                            <span class="font-size-13 text-muted">128 KB</span>
+                                            <h6 class="mb-0">{{ project.excel_file }}</h6>
+                                            <span class="font-size-13 text-muted">{{ project.excel_file_size }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -97,5 +99,40 @@
     </div>
 </div>
 <!-- Content Wrapper END -->
+<!-- Bower JS -->
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script>
+    // Fungsi untuk mengirimkan request AJAX ketika tombol delete diklik
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.btn-delete-project');
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const projectId = button.getAttribute('data-project-id');
+
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/project/delete/${projectId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
+
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('project.index') }}';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
 
 {% endblock %}
