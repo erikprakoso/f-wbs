@@ -4,18 +4,18 @@
 <!-- Content Wrapper START -->
 <div class="main-content">
     <div class="page-header">
-        <h2 class="header-title">Sheet Name</h2>
+        <h2 class="header-title">WBS</h2>
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
-                <a href="{{ url_for('sheet_name.sheets') }}" class="breadcrumb-item"><i
-                        class="anticon anticon-home m-r-5"></i>Sheet Name</a>
+                <a href="{{ url_for('wbs.wbs') }}" class="breadcrumb-item"><i
+                        class="anticon anticon-home m-r-5"></i>WBS</a>
             </nav>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between">
-                <h4>Sheet Name</h4>
+                <h4>WBS</h4>
                 <div class="dropdown dropdown-animated scale-left">
                     <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
                         <i class="anticon anticon-ellipsis"></i>
@@ -39,27 +39,43 @@
                                 Name
                             </th>
                             <th>
+                                Created At
+                            </th>
+                            <th>
+                                Updated At
+                            </th>
+                            <th>
                                 Action
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for sheet in sheets %}
+                        {% for wb in wbs %}
                         <tr>
                             <td>
-                                {{ sheet.id }}
+                                {{ wb.id }}
                             </td>
                             <td>
-                                {{ sheet.name }}
+                                {{ wb.name }}
                             </td>
                             <td>
-                                <a href="#" class="badge badge-blue btn-edit-sheet" data-toggle="modal"
-                                    data-target="#editModal" data-sheet-id="{{ sheet.id }}"
-                                    data-sheet-name="{{ sheet.name }}" style="font-size: 15px;" title="Edit">
+                                {{ wb.created_at }}
+                            </td>
+                            <td>
+                                {{ wb.updated_at }}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('wbs.detail', id=wb.id) }}" class="badge badge-green"
+                                    style="font-size: 15px;" title="Detail">
+                                    <i class="anticon anticon-eye"></i>
+                                </a>
+                                <a href="#" class="badge badge-blue btn-edit-wbs" data-toggle="modal"
+                                    data-target="#editModal" data-wbs-id="{{ wb.id }}"
+                                    data-wbs-name="{{ wb.name }}" style="font-size: 15px;" title="Edit">
                                     <i class="anticon anticon-edit"></i>
                                 </a>
-                                <a href="#" class="badge badge-red btn-delete-sheet" style="font-size: 15px;"
-                                    title="Delete" data-sheet-id="{{ sheet.id }}">
+                                <a href="#" class="badge badge-red btn-delete-wbs" style="font-size: 15px;"
+                                    title="Delete" data-wbs-id="{{ wb.id }}">
                                     <i class="anticon anticon-delete"></i>
                                 </a>
                             </td>
@@ -73,6 +89,12 @@
                             </th>
                             <th>
                                 Name
+                            </th>
+                            <th>
+                                Created At
+                            </th>
+                            <th>
+                                Updated At
                             </th>
                             <th>
                                 Action
@@ -89,7 +111,7 @@
 <div class="modal fade" id="createModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form action="{{ url_for('sheet_name.store') }}" method="POST">
+            <form action="{{ url_for('wbs.store') }}" method="POST">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createModalTitle">Create</h5>
                     <button type="button" class="close" data-dismiss="modal">
@@ -97,7 +119,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" id="sheet_name" name="sheet_name" placeholder="Sheet Name">
+                    <input type="text" class="form-control" id="wbs_name" name="wbs_name" placeholder="WBS Name">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -120,8 +142,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" id="sheet_name_edit" name="sheet_name_edit"
-                        placeholder="Sheet Name">
+                    <input type="text" class="form-control" id="wbs_edit" name="wbs_edit"
+                        placeholder="WBS Name">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -136,14 +158,14 @@
 <script>
     // Fungsi untuk mengirimkan request AJAX ketika tombol delete diklik
     document.addEventListener('DOMContentLoaded', function () {
-        const deleteButtons = document.querySelectorAll('.btn-delete-sheet');
+        const deleteButtons = document.querySelectorAll('.btn-delete-wbs');
 
         deleteButtons.forEach(function (button) {
             button.addEventListener('click', function () {
-                const sheetId = button.getAttribute('data-sheet-id');
+                const wbsId = button.getAttribute('data-wbs-id');
 
                 // Kirim request AJAX menggunakan fetch API
-                fetch(`/sheet/delete/${sheetId}`, {
+                fetch(`/wbs/delete/${wbsId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -156,7 +178,7 @@
 
                         // Jika berhasil, redirect ke halaman index proyek
                         if (data.message === 'Data deleted successfully.') {
-                            window.location.href = '{{ url_for('sheet_name.sheets') }}';
+                            window.location.href = '{{ url_for('wbs.wbs') }}';
                         }
                     })
                     .catch((error) => {
@@ -168,11 +190,11 @@
 </script>
 
 <script>
-    function updateSheetName(sheetId, updatedName) {
+    function updateWbsName(wbsId, updatedName) {
         const formData = new FormData();
-        formData.append('sheet_name_edit', updatedName);
+        formData.append('wbs_edit', updatedName);
 
-        fetch(`/sheet/update/${sheetId}`, {
+        fetch(`/wbs/update/${wbsId}`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -183,8 +205,8 @@
         .then((data) => {
             alert(data.message);
             if (data.message === 'Data updated successfully.') {
-                // Reload the table after updating the sheet name
-                fetchSheetNames();
+                // Reload the table after updating the wbs name
+                fetchWbsNames();
             }
         })
         .catch((error) => {
@@ -192,8 +214,8 @@
         });
     }
 
-    function fetchSheetNames() {
-        fetch('{{ url_for("sheet_name.sheets") }}', {
+    function fetchWbsNames() {
+        fetch('{{ url_for("wbs.wbs") }}', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
             },
@@ -208,32 +230,32 @@
         });
     }
 
-    // Function to display the edit modal with the selected sheet name data
-    function displayEditModal(sheetId, sheetName) {
+    // Function to display the edit modal with the selected wbs name data
+    function displayEditModal(wbsId, wbsName) {
         const editModalTitle = document.getElementById('editModalTitle');
-        const sheetNameInput = document.getElementById('sheet_name_edit');
+        const wbsNameInput = document.getElementById('wbs_edit');
         const editForm = document.getElementById('editForm');
 
         // Set the modal title
         editModalTitle.innerHTML = 'Edit';
 
-        // Set the sheet name data to the input field
-        sheetNameInput.value = sheetName;
+        // Set the wbs name data to the input field
+        wbsNameInput.value = wbsName;
 
-        // Update the form action to include the sheet ID for submission
-        editForm.action = `/sheet/update/${sheetId}`;
+        // Update the form action to include the wbs ID for submission
+        editForm.action = `/wbs/update/${wbsId}`;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const editButtons = document.querySelectorAll('.btn-edit-sheet');
+        const editButtons = document.querySelectorAll('.btn-edit-wbs');
 
         editButtons.forEach(function (button) {
             button.addEventListener('click', function () {
-                const sheetId = button.getAttribute('data-sheet-id');
-                const sheetName = button.getAttribute('data-sheet-name');
+                const wbsId = button.getAttribute('data-wbs-id');
+                const wbsName = button.getAttribute('data-wbs-name');
 
-                // Display the edit modal with the selected sheet name data
-                displayEditModal(sheetId, sheetName);
+                // Display the edit modal with the selected wbs name data
+                displayEditModal(wbsId, wbsName);
             });
         });
     });
