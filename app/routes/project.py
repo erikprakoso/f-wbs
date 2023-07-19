@@ -66,7 +66,7 @@ def store():
     location = request.form['inputLocation']
     start_date = request.form['inputStartDate']
     end_date = request.form['inputEndDate']
-    sheet_names = request.form.getlist('inputSheetName[]')
+    revit_link = request.form['inputLinkRevit']
 
     # Get uploaded files
     revit_file = request.files['inputUploadRevit']
@@ -120,7 +120,8 @@ def store():
         photo_file=photo_filename,
         revit_file_size=revit_file_size_formatted,
         excel_file_size=excel_file_size_formatted,
-        photo_file_size=photo_file_size_formatted
+        photo_file_size=photo_file_size_formatted,
+        revit_link=revit_link,
     )
 
     # Save project to the database
@@ -175,6 +176,7 @@ def update(id):
         location = request.form['inputLocation']
         start_date = request.form['inputStartDate']
         end_date = request.form['inputEndDate']
+        revit_link = request.form['inputLinkRevit']
 
         # Get uploaded files
         revit_file = request.files['inputUploadRevit']
@@ -283,6 +285,7 @@ def update(id):
         project.location = location
         project.start_date = start_date
         project.end_date = end_date
+        project.revit_link = revit_link
 
         # Commit to database
         db.session.commit()

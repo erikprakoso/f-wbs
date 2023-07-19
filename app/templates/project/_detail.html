@@ -36,6 +36,13 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="m-t-40 d-flex flex-column align-items-center">
+                            <!-- Add a container div for the image to set max width and center it -->
+                            <div class="d-flex justify-content-center">
+                                <img class="img-fluid" src="{{ url_for('static', filename='uploads/' + project.photo_file) }}" alt="revit">
+                            </div>
+                            <a href="{{ project.revit_link }}" target="_blank">Autodesk Viewer 3D</a>
+                        </div>                        
                         <div class="m-t-40">
                             <h6>Type:</h6>
                             <p>{{ project.type }}</p>
@@ -58,38 +65,44 @@
                         <div class="tab-content m-t-15 p-25">
                             <div class="tab-pane fade show active" id="project-details-attachment">
                                 <div class="file" style="min-width: 200px;">
-                                    <div class="media align-items-center">
-                                        <div class="avatar avatar-icon avatar-cyan rounded m-r-15">
-                                            <i class="anticon anticon-file-image font-size-20"></i>
+                                    <a href="{{ url_for('static', filename='uploads/' + project.photo_file) }}" download>
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-icon avatar-cyan rounded m-r-15">
+                                                <i class="anticon anticon-file-image font-size-20"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">{{ project.photo_file }}</h6>
+                                                <span class="font-size-13 text-muted">{{ project.photo_file_size }}</span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0">{{ project.photo_file }}</h6>
-                                            <span class="font-size-13 text-muted">{{ project.photo_file_size }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </a>
+                                </div>                                
                                 <div class="file" style="min-width: 200px;">
-                                    <div class="media align-items-center">
-                                        <div class="avatar avatar-icon avatar-blue rounded m-r-15">
-                                            <i class="anticon anticon-file-add font-size-20"></i>
+                                    <a href="{{ url_for('static', filename='uploads/' + project.revit_file) }}" download>
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-icon avatar-blue rounded m-r-15">
+                                                <i class="anticon anticon-file-add font-size-20"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">{{ project.revit_file }}</h6>
+                                                <span class="font-size-13 text-muted">{{ project.revit_file_size }}</span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0">{{ project.revit_file }}</h6>
-                                            <span class="font-size-13 text-muted">{{ project.revit_file_size }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </a>
+                                </div>                                
                                 <div class="file" style="min-width: 200px;">
-                                    <div class="media align-items-center">
-                                        <div class="avatar avatar-icon avatar-gold rounded m-r-15">
-                                            <i class="anticon anticon-file-excel font-size-20"></i>
+                                    <a href="{{ url_for('static', filename='uploads/' + project.excel_file) }}" download>
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-icon avatar-gold rounded m-r-15">
+                                                <i class="anticon anticon-file-excel font-size-20"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">{{ project.excel_file }}</h6>
+                                                <span class="font-size-13 text-muted">{{ project.excel_file_size }}</span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0">{{ project.excel_file }}</h6>
-                                            <span class="font-size-13 text-muted">{{ project.excel_file_size }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </a>
+                                </div>                                
                             </div>
                         </div>
                     </div>

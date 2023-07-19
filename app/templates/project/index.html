@@ -12,55 +12,57 @@
             </nav>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-11 mx-auto">
-            <div class="page-actions m-b-10">
-                <a href="{{ url_for('project.create') }}" class="btn btn-primary">Create Project</a>
-            </div>
-            <div class="row">
-                {% for project in projects %}
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="card-img-top"
-                            src="{{ url_for('static', filename='uploads/' + project.photo_file) }}" alt="">
-                        <div class="card-body">
-                            <h4 class="m-t-10">{{ project.name }}</h4>
-                            <p class="m-b-20">{{ project.type }}
-                            <p class="m-b-20">{{ project.location }}
-                            <div class="d-flex align-items-center justify-content-between">
-                                <p class="m-b-0 text-dark font-weight-semibold font-size-15">
-                                    {{ project.start_date }} - {{ project.end_date }}
-                                    <a class="text-primary btn btn-sm btn-hover" href="{{ url_for('project.detail', id=project.id) }}">
-                                        <span>Read More</span>
-                                    </a>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="d-flex align-items-center m-t-5">
-                                <div class="avatar avatar-image avatar-sm">
-                                    <img src="assets/images/avatars/thumb-2.jpg" alt="">
-                                </div>
-                                <div class="m-l-10">
-                                    <span class="font-weight-semibold">Darryl Day</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h4>Project</h4>
+                <div class="dropdown dropdown-animated scale-left">
+                    <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
+                        <i class="anticon anticon-ellipsis"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('project.create') }}" class="dropdown-item">
+                            <i class="anticon anticon-plus"></i>
+                            <span class="m-l-10">Create</span>
+                        </a>
+                    </div>                    
                 </div>
-                {% endfor %}
+            </div>
+            <div class="m-t-25">
+                <table id="data-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Start date</th>
+                            <th>End Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td><a href="{{ url_for('project.detail', id=project.id) }}">{{ project.name }}</a></td>
+                            <td>{{ project.type }}</td>
+                            <td>{{ project.location }}</td>
+                            <td>{{ project.start_date }}</td>
+                            <td>{{ project.end_date }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Start date</th>
+                            <th>End Date</th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
-    </div>
-    <div class="m-t-30">
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
     </div>
 </div>
 <!-- Content Wrapper END -->

@@ -13,3 +13,4 @@ class Project(db.Model):
     revit_file_size = db.Column(db.String(10))
     excel_file_size = db.Column(db.String(10))
     photo_file_size = db.Column(db.String(10))
+    revit_link = db.Column(db.String(255))
