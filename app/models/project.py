@@ -14,3 +14,5 @@ class Project(db.Model):
     excel_file_size = db.Column(db.String(10))
     photo_file_size = db.Column(db.String(10))
     revit_link = db.Column(db.String(255))
+
+    wbs_headers = db.relationship('WbsHeaderProject', backref='project', lazy='dynamic', cascade='all, delete-orphan')
