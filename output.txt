@@ -1,0 +1,36 @@
+238087ee-ec7d-4d13-a581-3ee60aa95e80-00012ff8~77816~Unnamed: 2~Unnamed: 3~Unnamed: 4
+74e46f31-7d48-47ee-9207-931708e57a52-00000932~2354~Elevation: Building Elevation~Elevation~
+6a2e586d-f40e-42e8-9f78-da117650020f-00000ea6~3750~~~
+6a2e586d-f40e-42e8-9f78-da117650020f-00000ea8~3752~~~
+6a2e586d-f40e-42e8-9f78-da117650020f-00000eaa~3754~~~
+6a2e586d-f40e-42e8-9f78-da117650020f-00000eac~3756~~~
+61c853ee-cf0f-44d9-964d-3e22c372893a-000012c3~4803~Elevation: Building Elevation~Elevation~
+61c853ee-cf0f-44d9-964d-3e22c372893a-000012d0~4816~Elevation: Building Elevation~Elevation~
+61c853ee-cf0f-44d9-964d-3e22c372893a-000012db~4827~Elevation: Building Elevation~Elevation~
+e9352fe0-2f91-4345-a61d-65a37a27bcaa-00014386~82822~~~
+ba86e595-fedf-45a4-b587-9664ea5d4c87-00011190~70032~Structural Plan: Structural Plan~Structural Plan~
+ba86e595-fedf-45a4-b587-9664ea5d4c87-00011198~70040~Structural Plan: Structural Plan~Structural Plan~
+f0265984-8763-496e-aea2-2c086dd004f6-0006024f~393807~Structural Plan: Structural Plan~Structural Plan~
+2a21c813-53a0-408d-83b7-d00825999d89-00066dc6~421318~Structural Plan: Structural Plan~Structural Plan~
+2a21c813-53a0-408d-83b7-d00825999d89-00066dd0~421328~Structural Plan: Structural Plan~Structural Plan~
+2a21c813-53a0-408d-83b7-d00825999d89-00066dda~421338~Structural Plan: Structural Plan~Structural Plan~
+72d1d910-b2c5-428e-8311-61279e816728-0006b838~440376~Structural Plan: Structural Plan~Structural Plan~
+0768a235-0d59-4fbc-aa02-91fbf6f2de46-00000a44~2628~~~
+84d323c5-8c9a-42ce-afe5-2a4c8fa69c5f-00006ba0~27552~~~
+21b5a044-d6cb-4bf9-bdc4-d24691c54965-00012d8a~77194~~~
+21b5a044-d6cb-4bf9-bdc4-d24691c54965-00012d8b~77195~~~
+d9e95223-a5d4-481d-9c11-30bc28467365-00025534~152884~~~
+c177208b-d106-4356-910c-1aa232229cdd-0006ca07~444935~Legend: Legend~Legend~
+3120659d-0bee-4f2e-a73e-88a1ba70da77-000698d4~432340~Section: Building Section~Section~
+3120659d-0bee-4f2e-a73e-88a1ba70da77-0006a6fa~435962~Section: Building Section~Section~
+a0d95dab-43a1-4ab6-9bc2-9a9cd13d1d3e-0006bf9c~442268~Section: Building Section~Section~
+c177208b-d106-4356-910c-1aa232229cdd-0006cf03~446211~Section: Building Section~Section~
+b2adecd6-66e3-4ef6-b2e1-c3385a40bcba-0006cfd6~446422~Section: Building Section~Section~
+21b5a044-d6cb-4bf9-bdc4-d24691c54965-00012d8c~77196~~~
+db178efc-02fd-4688-9f94-a317ffff26b7-00029bff~171007~~~
+db178efc-02fd-4688-9f94-a317ffff26b7-00029c01~171009~~~
+6b145988-960b-40b8-90d0-46a0b544e5bf-00055e62~351842~~~
+338c9d9f-5170-4142-ab68-d255622cb6c4-0005d6bc~382652~~~
+d9e7ac3a-5e34-456c-9dd7-22b0f1e9309f-00067710~423696~3D View: 3D View~3D View~
+72d1d910-b2c5-428e-8311-61279e816728-0006b806~440326~3D View: 3D View~3D View~
+72d1d910-b2c5-428e-8311-61279e816728-0006b824~440356~~~

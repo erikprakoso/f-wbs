@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Project</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="{{ url_for('project.index') }}" class="breadcrumb-item"><i
+                        class="anticon anticon-home m-r-5"></i>Project</a>
+                <a class="breadcrumb-item" href="{{ url_for('project.detail', id=project.id) }}">Detail</a>
+                <a class="breadcrumb-item active"
+                    href="{{ url_for('project.wbs_detail', id=project.id, header_id=header.id) }}">WBS</a>
+            </nav>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>WBS Header</h5>
+                        </div>
+                        <div class="m-t-30">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Created Date</th>
+                                            <th>Finished Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {{ header.id }}
+                                            </td>
+                                            <td>
+                                                {{ header.name }}
+                                            </td>
+                                            <td>
+                                                {{ header.created_at }}
+                                            </td>
+                                            <td>
+                                                {{ header.updated_at }}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-default btn-create-date"
+                                                    data-header-id="{{ header.id }}">Created Date</button>
+                                                <button class="btn btn-sm btn-default btn-finish-date"
+                                                    data-header-id="{{ header.id }}">Finished Date</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>WBS Detail</h5>
+                        </div>
+                        <div class="m-t-30">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Created Date</th>
+                                            <th>Finished Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for detail in details %}
+                                        <tr data-toggle="collapse" data-target="#detail-{{ detail.id }}"
+                                            aria-expanded="false" aria-controls="detail-{{ detail.id }}">
+                                            <td>
+                                                {{ header.id }}.{{ detail.id }}
+                                            </td>
+                                            <td>
+                                                {{ detail.name }}
+                                            </td>
+                                            <td>
+                                                {{ detail.created_at }}
+                                            </td>
+                                            <td>
+                                                {{ detail.updated_at }}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-default btn-create-date"
+                                                    data-detail-id="{{ detail.id }}">Created Date</button>
+                                                <button class="btn btn-sm btn-default btn-finish-date"
+                                                    data-detail-id="{{ detail.id }}">Finished Date</button>
+                                            </td>
+                                        </tr>
+                                        <tr id="detail-{{ detail.id }}" class="collapse">
+                                            <td colspan="5">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Name</th>
+                                                            <th>Created Date</th>
+                                                            <th>Finished Date</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for item in detail.items %}
+                                                        <tr>
+                                                            <td>
+                                                                {{ header.id }}.{{ detail.id }}.{{ item.id }}
+                                                            </td>
+                                                            <td>
+                                                                {{ item.name }}
+                                                            </td>
+                                                            <td>
+                                                                {{ item.created_at }}
+                                                            </td>
+                                                            <td>
+                                                                {{ item.updated_at }}
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-default btn-create-date"
+                                                                    data-item-id="{{ item.id }}">Created Date</button>
+                                                                <button class="btn btn-sm btn-default btn-finish-date"
+                                                                    data-item-id="{{ item.id }}">Finished Date</button>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Content Wrapper END -->
+<!-- Bower JS -->
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script>
+    // This function ensures that only one row is expanded at a time
+    function handleCollapse(target) {
+        $('.collapse').not(target).collapse('hide');
+    }
+
+    $(document).ready(function () {
+        // When a row is clicked, toggle the expandable content and handle other collapses
+        $('.table').on('click', 'tr[data-toggle="collapse"]', function () {
+            var target = $(this).data('target');
+            handleCollapse(target);
+        });
+    });
+</script>
+<script>
+    // Fungsi untuk mengirimkan request AJAX ketika tombol delete diklik
+    document.addEventListener('DOMContentLoaded', function () {
+        const createButton = document.querySelectorAll('.btn-create-date');
+
+        createButton.forEach(function (button) {
+            button.addEventListener('click', function () {
+                if (button.getAttribute('data-header-id')) {
+                    const headerId = button.getAttribute('data-header-id');
+                    const type = 'header';
+                    const date = 'created';
+
+                    // Kirim request AJAX menggunakan fetch API
+                    fetch(`/project/${headerId}/wbs/${type}/date/${date}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            // Tampilkan pesan sukses atau gagal
+                            alert(data.message);
+                            window.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }
+                else if (button.getAttribute('data-detail-id')) {
+                    const detailId = button.getAttribute('data-detail-id');
+                    const type = 'detail';
+                    const date = 'created';
+
+                    // Kirim request AJAX menggunakan fetch API
+                    fetch(`/project/${detailId}/wbs/${type}/date/${date}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            // Tampilkan pesan sukses atau gagal
+                            alert(data.message);
+                            window.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                } else if (button.getAttribute('data-item-id')) {
+                    const itemId = button.getAttribute('data-item-id');
+                    const type = 'item';
+                    const date = 'created';
+
+                    // Kirim request AJAX menggunakan fetch API
+                    fetch(`/project/${itemId}/wbs/${type}/date/${date}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            // Tampilkan pesan sukses atau gagal
+                            alert(data.message);
+                            window.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

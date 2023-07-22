@@ -3,6 +3,15 @@ from werkzeug.utils import secure_filename
 import os
 from app import db, create_app
 from app.models.project import Project
+from app.models.sheet_name import SheetName
+from app.models.wbs_header import WbsHeader
+from app.models.wbs_detail import WbsDetail
+from app.models.wbs_item import WbsItem
+from app.models.wbs_header_project import WbsHeaderProject
+from app.models.wbs_detail_project import WbsDetailProject
+from app.models.wbs_item_project import WbsItemProject
+import pandas as pd
+from sqlalchemy import and_
 
 project_bp = Blueprint('project', __name__)
 
@@ -44,7 +53,72 @@ def detail(id):
         return redirect(url_for('auth.login'))
 
     project = Project.query.get(id)
-    return render_template('project/_detail.html', project=project)
+    headers = WbsHeaderProject.query.filter(WbsHeaderProject.project_id == id).all()
+    return render_template('project/_detail.html', project=project, headers=headers)
+
+@project_bp.route('/project/<int:id>/wbs/<int:header_id>/detail')
+def wbs_detail(id, header_id):
+    if 'email' not in session:
+        return redirect(url_for('auth.login'))
+
+    project = Project.query.get(id)
+    header = WbsHeaderProject.query.get(header_id)
+    details = WbsDetailProject.query.filter(WbsDetailProject.wbs_header_project_id == header.id).all()
+    
+    for detail in details:
+        items = WbsItemProject.query.filter(WbsItemProject.wbs_detail_project_id == detail.id).all()
+        
+        detail_items = []  # List to hold the items for the current detail
+        for item in items:
+            item_data = {
+                'id': item.id,
+                'name': item.name,
+                'created_at': item.created_at,
+                'updated_at': item.updated_at,
+                # Add other item properties as needed
+            }
+            detail_items.append(item_data)
+        
+        detail.items = detail_items  # Assign the list of items to the detail
+
+    return render_template('project/wbs/_detail.html', project=project, header=header, details=details)
+
+
+@project_bp.route('/project/<int:id>/wbs/<string:type>/date/<string:date>', methods=['POST'])
+def wbs_date(id, type, date):
+    if 'email' not in session:
+        return redirect(url_for('auth.login'))
+
+    if type == 'header':
+        if date == 'created':
+            header = WbsHeaderProject.query.get(id)
+            header.created_at = db.func.current_timestamp()
+            db.session.commit()
+        elif date == 'updated':
+            header = WbsHeaderProject.query.get(id)
+            header.updated_at = db.func.current_timestamp()
+            db.session.commit()
+    elif type == 'detail':
+        if date == 'created':
+            detail = WbsDetailProject.query.get(id)
+            detail.created_at = db.func.current_timestamp()
+            db.session.commit()
+        elif date == 'updated':
+            detail = WbsDetailProject.query.get(id)
+            detail.updated_at = db.func.current_timestamp()
+            db.session.commit()
+    elif type == 'item':
+        if date == 'created':
+            item = WbsItemProject.query.get(id)
+            item.created_at = db.func.current_timestamp()
+            db.session.commit()
+        elif date == 'updated':
+            item = WbsItemProject.query.get(id)
+            item.updated_at = db.func.current_timestamp()
+            db.session.commit()
+    
+    return jsonify({'message': 'Data updated successfully.'})
+
 
 
 @project_bp.route('/project/edit/<int:id>')
@@ -108,6 +182,9 @@ def store():
     excel_file.save(os.path.join(app.config['UPLOAD_FOLDER'], excel_filename))
     photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], photo_filename))
 
+    # Get the full path of the uploaded Excel file
+    excel_file_full_path = os.path.join(app.config['UPLOAD_FOLDER'], excel_filename)
+
     # Create a new project object
     project = Project(
         name=name,
@@ -127,6 +204,11 @@ def store():
     # Save project to the database
     db.session.add(project)
     db.session.commit()
+
+    # Access the ID of the newly inserted project
+    project_id = project.id
+
+    wbs = store_multiple_sheet(project_id, excel_file_full_path)
 
     return jsonify({'message': 'Data stored successfully.'})
 
@@ -293,3 +375,154 @@ def update(id):
         return jsonify({'message': 'Data updated successfully.'})
     else:
         return jsonify({'message': 'Project not found.'}), 404
+    
+
+def store_multiple_sheet(id, excel_file):
+    print('excel_file', excel_file)
+    print('id', id)
+    # get all data from sheet name
+    sheets = SheetName.query.all()
+
+    # create empty list
+    sheet_names = []
+
+    # iterate through the sheets and append their names to sheet_names
+    for sheet in sheets:
+        sheet_names.append(sheet.name)
+
+    # Initialize a set to store the unique desired values
+    desired_values = set()
+
+    print(sheet_names)
+
+    for sheet_name in sheet_names:
+        # Read the XLSX file, skipping the first row (header)
+        df = pd.read_excel(excel_file, sheet_name=sheet_name, skiprows=2)
+
+        # Convert DataFrame to a string with ~ delimiter
+        df_string = df.to_csv(sep='~', index=False)
+
+        # Save the string to a TXT file
+        with open('output.txt', 'w') as txt_file:
+            txt_file.write(df_string)
+
+        # Read the TXT file and get the contents
+        with open('output.txt', 'r') as txt_file:
+            file_contents = txt_file.read()
+
+        # Split the contents into lines
+        lines = file_contents.split('\n')
+
+        # Exclude any empty lines
+        lines = [line for line in lines if line]
+
+        for line in lines:
+            rows = line.split('~')
+            if len(rows) >= 3:
+                value = rows[2]  # Access the value at index 2
+                dimension = value.split(': ')[-1]  # Extract the dimension from the value
+                desired_values.add(dimension)
+
+        print(desired_values)
+        for value in desired_values:
+            print(value)
+            header = WbsHeader.query.filter(WbsHeader.name.ilike(value.upper())).first()
+            if header:
+                print('header', header.id)
+                print('header', header.name)
+                
+                get_project_header = WbsHeaderProject.query.filter(WbsHeaderProject.name.ilike(header.name, project_id=id)).first()
+                if get_project_header:
+                    print('get_project_header', get_project_header.id)
+                    print('get_project_header', get_project_header.name)
+                else:
+                    insert_project_header = WbsHeaderProject(
+                        name=header.name,
+                        project_id=id
+                    )
+                    db.session.add(insert_project_header)
+                    db.session.commit()
+
+                    new_project_header_id = insert_project_header.id
+                    print('new_project_header_id', new_project_header_id)
+
+                    details = WbsDetail.query.filter(WbsDetail.wbs_header_id == header.id).all()
+                    for detail in details:
+                        print('detail', detail.id)
+                        print('detail', detail.name)
+                        insert_project_detail = WbsDetailProject(
+                            name=detail.name,
+                            wbs_header_project_id=new_project_header_id
+                        )
+                        db.session.add(insert_project_detail)
+                        db.session.commit()
+
+                        new_project_detail_id = insert_project_detail.id
+                        print('new_project_detail_id', new_project_detail_id)
+
+                        items = WbsItem.query.filter(WbsItem.wbs_detail_id == detail.id).all()
+                        for item in items:
+                            print('item', item.id)
+                            print('item', item.name)
+                            insert_project_item = WbsItemProject(
+                                name=item.name,
+                                wbs_detail_project_id=new_project_detail_id
+                            )
+                            db.session.add(insert_project_item)
+                            db.session.commit()
+
+            else:
+                detail = WbsDetail.query.filter(WbsDetail.name.ilike(value.upper())).first()
+                if detail:
+                    print('detail', detail.id)
+                    print('detail', detail.name)
+                    print('detail', detail.wbs_header_id)
+
+                    get_header = WbsHeader.query.filter(WbsHeader.id == detail.wbs_header_id).first()
+                    print('get_header', get_header.id)
+                    print('get_header', get_header.name)
+
+                    # Use and_ to combine the filter conditions for name and project_id
+                    get_project_header = WbsHeaderProject.query.filter(and_(WbsHeaderProject.name.ilike(get_header.name), WbsHeaderProject.project_id == id)).first()
+                    if get_project_header:
+                        print('get_project_header', get_project_header.id)
+                        print('get_project_header', get_project_header.name)
+                    else:
+                        insert_project_header = WbsHeaderProject(
+                            name=get_header.name,
+                            project_id=id
+                        )
+                        db.session.add(insert_project_header)
+                        db.session.commit()
+
+                        new_project_header_id = insert_project_header.id
+                        print('new_project_header_id', new_project_header_id)
+
+                        details = WbsDetail.query.filter(WbsDetail.wbs_header_id == get_header.id).all()
+                        for detail in details:
+                            print('detail', detail.id)
+                            print('detail', detail.name)
+                            insert_project_detail = WbsDetailProject(
+                                name=detail.name,
+                                wbs_header_project_id=new_project_header_id
+                            )
+                            db.session.add(insert_project_detail)
+                            db.session.commit()
+
+                            new_project_detail_id = insert_project_detail.id
+                            print('new_project_detail_id', new_project_detail_id)
+
+                            items = WbsItem.query.filter(WbsItem.wbs_detail_id == detail.id).all()
+                            for item in items:
+                                print('item', item.id)
+                                print('item', item.name)
+                                insert_project_item = WbsItemProject(
+                                    name=item.name,
+                                    wbs_detail_project_id=new_project_detail_id
+                                )
+                                db.session.add(insert_project_item)
+                                db.session.commit()
+                else:
+                    print('Not found')
+
+    return desired_values
