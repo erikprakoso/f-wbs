@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header no-gutters has-tab">
+        <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+            <div class="media align-items-center m-b-15">
+                <div class="avatar avatar-image rounded" style="height: 70px; width: 70px">
+                    <i class="anticon anticon-file-image-o font-size-30 text-primary">
+                    </i>
+                </div>
+                <div class="m-l-15">
+                    <h4 class="m-b-0">{{ wbs.name }}</h4>
+                    <p class="text-muted m-b-0">ID: {{ wbs.id }}</p>
+                </div>
+            </div>
+
+            <!-- Back link -->
+            <div>
+                <a href="{{ url_for('wbs.detail', id=wbs.id) }}" class="btn btn-link">Back</a>
+            </div>
+        </div>
+        
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#detail-overview">Detail Item</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container-fluid">
+        <div class="tab-content m-t-15">
+            <div class="tab-pane fade show active" id="detail-overview">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">WBS Detail</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="m-t-10">
+                            <h6>Code:</h6>
+                            <p>{{ wbs_detail.code }}</p>
+                        </div>
+                        <div class="m-t-10">
+                            <h6>Name:</h6>
+                            <p>{{ wbs_detail.name }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title">WBS Detail Item</h4>
+                            <div class="dropdown dropdown-animated scale-left">
+                                <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
+                                    <i class="anticon anticon-ellipsis"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" type="button" data-toggle="modal"
+                                        data-target="#createModal">
+                                        <i class="anticon anticon-plus"></i>
+                                        <span class="m-l-10">Create</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Code
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Created At
+                                        </th>
+                                        <th>
+                                            Updated At
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for wb in wbs_items %}
+                                    <tr>
+                                        <td>
+                                            {{ wb.code }}
+                                        </td>
+                                        <td>
+                                            {{ wb.name }}
+                                        </td>
+                                        <td>
+                                            {{ wb.created_at }}
+                                        </td>
+                                        <td>
+                                            {{ wb.updated_at }}
+                                        </td>
+                                        <td>
+                                            <a href="#" class="badge badge-blue btn-edit-wbs" data-toggle="modal"
+                                                data-target="#editModal" data-wbs-id="{{ wb.id }}"
+                                                data-wbs-code="{{ wb.code }}" data-wbs-name="{{ wb.name }}"
+                                                style="font-size: 15px;" title="Edit">
+                                                <i class="anticon anticon-edit"></i>
+                                            </a>
+                                            <a href="#" class="badge badge-red btn-delete-wbs" style="font-size: 15px;"
+                                                title="Delete" data-wbs-id="{{ wb.id }}">
+                                                <i class="anticon anticon-delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            Code
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Created At
+                                        </th>
+                                        <th>
+                                            Updated At
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Content Wrapper END -->
+<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ url_for('wbs.store_item') }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalTitle">Create</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="wbs_item_code" name="wbs_item_code"
+                            placeholder="WBS Code">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="wbs_item_name" name="wbs_item_name"
+                            placeholder="WBS Name">
+                    </div>
+                    <input type="text" id="wbs_header_id" name="wbs_header_id" value="{{ wbs.id }}" hidden>
+                    <input type="text" id="wbs_detail_id" name="wbs_detail_id" value="{{ wbs_detail.id }}" hidden>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="editForm" action="" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalTitle">Edit</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="wbs_item_code_edit" name="wbs_item_code_edit"
+                            placeholder="WBS Code">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="wbs_item_name_edit" name="wbs_item_name_edit"
+                            placeholder="WBS Name">
+                    </div>
+                    <input type="text" id="wbs_header_id_edit" name="wbs_header_id_edit" value="{{ wbs.id }}" hidden>
+                    <input type="text" id="wbs_detail_id_edit" name="wbs_detail_id_edit" value="{{ wbs_detail.id }}"
+                        hidden>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Bower JS -->
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script>
+    // Fungsi untuk mengirimkan request AJAX ketika tombol delete diklik
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.btn-delete-wbs');
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const wbsId = button.getAttribute('data-wbs-id');
+
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/wbs/detail/item/delete/${wbsId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
+
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('wbs.detail_item', id=wbs.id, detail_id=wbs_detail.id) }}';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
+
+<script>
+    function updateWbsName(wbsId, updatedCode, updatedName) {
+        const formData = new FormData();
+        formData.append('wbs_item_code_edit', updatedCode);
+        formData.append('wbs_item_name_edit', updatedName);
+
+        fetch(`/wbs/detail/item/update/${wbsId}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                alert(data.message);
+                if (data.message === 'Data updated successfully.') {
+                    // Reload the table after updating the wbs name
+                    fetchWbsNames();
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    function fetchWbsNames() {
+        fetch('{{ url_for("wbs.detail_item", id=wbs.id, detail_id=wbs_detail.id ) }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then((response) => response.text())
+            .then((data) => {
+                // Update the table body with the new data
+                document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Function to display the edit modal with the selected wbs name data
+    function displayEditModal(wbsId, wbsCode, wbsName) {
+        const editModalTitle = document.getElementById('editModalTitle');
+        const wbsCodeInput = document.getElementById('wbs_item_code_edit');
+        const wbsNameInput = document.getElementById('wbs_item_name_edit');
+        const editForm = document.getElementById('editForm');
+
+        // Set the modal title
+        editModalTitle.innerHTML = 'Edit'
+
+        // Set the wbs name data to the input field
+        wbsCodeInput.value = wbsCode;
+        wbsNameInput.value = wbsName;
+
+        // Update the form action to include the wbs ID for submission
+        editForm.action = `/wbs/detail/item/update/${wbsId}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const editButtons = document.querySelectorAll('.btn-edit-wbs');
+
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const wbsId = button.getAttribute('data-wbs-id');
+                const wbsCode = button.getAttribute('data-wbs-code');
+                const wbsName = button.getAttribute('data-wbs-name');
+
+                // Display the edit modal with the selected wbs name data
+                displayEditModal(wbsId, wbsCode, wbsName);
+            });
+        });
+    });
+</script>
+{% endblock %}

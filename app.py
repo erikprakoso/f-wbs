@@ -4,11 +4,8 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
 
-    # Register blueprints
-    from app.routes.auth import auth_bp
-    from app.routes.home import home_bp
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(home_bp)
+    # Configuration for upload folder
+    app.config['UPLOAD_FOLDER']
 
     return app
 
@@ -17,7 +14,7 @@ if __name__ == '__main__':
 
     @app.route('/')
     def index():
-        return redirect(url_for('home.index'))
+        return redirect(url_for('project.index'))
 
     @app.errorhandler(404)
     def page_not_found(error):

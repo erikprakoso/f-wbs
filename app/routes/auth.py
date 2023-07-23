@@ -8,7 +8,7 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if 'email' in session:
-        return redirect(url_for('home.index'))
+        return redirect(url_for('project.index'))
     if request.method == 'POST':
         email = request.form['email']
         print("email", email)
@@ -19,8 +19,10 @@ def login():
 
         if user and user.password == password:
             session['email'] = email
+            session['name'] = user.name
+            session['institute'] = user.institute
             flash('Login successful!', 'success')
-            return redirect(url_for('home.index'))
+            return redirect(url_for('project.index'))
 
         flash('Incorrect email or password. Please try again.', 'error')
         return render_template('login.html')

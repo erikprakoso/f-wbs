@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Project</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="{{ url_for('project.index') }}" class="breadcrumb-item"><i
+                        class="anticon anticon-home m-r-5"></i>Project</a>
+                <a href="{{ url_for('project.detail', id=project.id) }}" class="breadcrumb-item">Detail {{ project.name }}</a>
+                <a class="breadcrumb-item active" href="{{ url_for('project.edit', id=project.id) }}">Edit</a>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h4>Project</h4>
+            <p></p>
+            <div class="m-t-25">
+                <form id="projectForm" enctype="multipart/form-data">
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputName" name="inputName" placeholder="Name" value="{{ project.name }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputType" class="col-sm-2 col-form-label">Type</label>
+                        <div class="col-sm-10">
+                            <div class="col-sm-10">
+                                <select class="form-control" name="inputType" id="inputType">
+                                    <option value="Jembatan Beton" {% if project.type == 'Jembatan Beton' %}selected{% endif %}>Jembatan Beton</option>
+                                    <option value="Jembatan Baja" {% if project.type == 'Jembatan Baja' %}selected{% endif %}>Jembatan Baja</option>
+                                    <option value="Jembatan Komposit" {% if project.type == 'Jembatan Komposit' %}selected{% endif %}>Jembatan Komposit</option>
+                                    <option value="Gedung" {% if project.type == 'Gedung' %}selected{% endif %}>Gedung</option>
+                                    <option value="Jalan" {% if project.type == 'Jalan' %}selected{% endif %}>Jalan</option>
+                                    <option value="Bendungan" {% if project.type == 'Bendungan' %}selected{% endif %}>Bendungan</option>
+                                    <option value="Other" {% if project.type == 'Other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="form-group row">
+                        <label for="inputLocation" class="col-sm-2 col-form-label">Location</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputLocation" name="inputLocation"
+                                placeholder="Location" value="{{ project.location }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputStartDate" class="col-sm-2 col-form-label">Start Date</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="inputStartDate" name="inputStartDate"
+                                placeholder="Start Date" value="{{ project.start_date }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEndDate" class="col-sm-2 col-form-label">End Date</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="inputEndDate" name="inputEndDate"
+                                placeholder="End Date" value="{{ project.end_date }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputUploadRevit" class="col-sm-2 col-form-label">Upload Revit</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="form-control" id="inputUploadRevit" name="inputUploadRevit"
+                                placeholder="Upload Revit" value="{{ project.upload_revit }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputUploadExcel" class="col-sm-2 col-form-label">Upload Excel</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="form-control" id="inputUploadExcel" name="inputUploadExcel"
+                                placeholder="Upload Excel" value="{{ project.upload_excel }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputUploadPhoto" class="col-sm-2 col-form-label">Upload Photo</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="form-control" id="inputUploadPhoto" name="inputUploadPhoto"
+                                placeholder="Upload Excel" value="{{ project.upload_photo }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputLinkRevit" class="col-sm-2 col-form-label">Link Revit</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputLinkRevit" name="inputLinkRevit"
+                                placeholder="Link Revit" value="{{ project.revit_link }}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card-footer text-left">
+            <button type="button" class="btn btn-primary" onclick="updateProject()">Update</button>
+        </div>
+    </div>
+</div>
+<!-- Content Wrapper END -->
+
+<script>
+    function updateProject() {
+        const form = document.getElementById('projectForm');
+        const formData = new FormData(form);
+
+        // Disabling the "Update" button during the request
+        const updateButton = document.querySelector('.card-footer button');
+        updateButton.disabled = true;
+        updateButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+
+        const xhr = new XMLHttpRequest();
+        const projectId = {{ project.id }}; // Get the project ID
+        const url = `/project/update/${projectId}`; // Correct route URL with the project ID
+        xhr.open('POST', url);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // Response handling logic here
+                console.log(xhr.responseText);
+
+                // Re-enable the "Update" button
+                updateButton.disabled = false;
+                updateButton.innerHTML = 'Update';
+
+                // Show success message or alert
+                alert('Data updated successfully.');
+
+                // Reload the page
+                window.location.reload();
+            }
+        };
+        xhr.send(formData);
+    }
+</script>
+{% endblock %}

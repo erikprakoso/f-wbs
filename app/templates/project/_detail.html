@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Content Wrapper START -->
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Project</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="{{ url_for('project.index') }}" class="breadcrumb-item"><i
+                        class="anticon anticon-home m-r-5"></i>Project</a>
+                <a class="breadcrumb-item active" href="{{ url_for('project.detail', id=project.id) }}">Detail</a>
+            </nav>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 d-flex">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div class="media align-items-center">
+                                <div class="avatar avatar-image rounded">
+                                    <i class="anticon anticon-file-image font-size-15 text-primary"></i>
+                                </div>
+                                <div class="m-l-10">
+                                    <h4 class="m-b-0">{{ project.name }}</h4>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('project.index') }}" class="badge badge-cyan"
+                                    style="font-size: 15px;" title="Back"><i class="anticon anticon-arrow-left"></i></a>
+                                <a href="{{ url_for('project.edit', id=project.id) }}" class="badge badge-blue"
+                                    style="font-size: 15px;" title="Edit"><i class="anticon anticon-edit"></i></a>
+                                <a href="#" class="badge badge-red btn-delete-project" style="font-size: 15px;"
+                                    title="Delete" data-project-id="{{ project.id }}">
+                                    <i class="anticon anticon-delete"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="m-t-40 d-flex flex-column align-items-center">
+                            <!-- Add a container div for the image to set max width and center it -->
+                            <div class="d-flex justify-content-center">
+                                <img class="img-fluid"
+                                    src="{{ url_for('static', filename='uploads/' + project.photo_file) }}" alt="revit">
+                            </div>
+                            <a href="{{ project.revit_link }}" target="_blank">Autodesk Viewer 3D</a>
+                        </div>
+                        <div class="m-t-40">
+                            <h6>Type:</h6>
+                            <p>{{ project.type }}</p>
+                        </div>
+                        <div class="m-t-10">
+                            <h6>Location:</h6>
+                            <p>{{ project.location }}</p>
+                        </div>
+                        <div class="m-t-10">
+                            <h6>Date:</h6>
+                            <p>{{ project.start_date }} - {{ project.end_date }}</p>
+                        </div>
+                    </div>
+                    <div class="m-t-5">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#project-details-attachment">Attachment</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content m-t-15 p-25">
+                            <div class="tab-pane fade show active" id="project-details-attachment">
+                                <div class="file" style="min-width: 200px;">
+                                    <a href="{{ url_for('static', filename='uploads/' + project.photo_file) }}"
+                                        download>
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-icon avatar-cyan rounded m-r-15">
+                                                <i class="anticon anticon-file-image font-size-20"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">{{ project.photo_file }}</h6>
+                                                <span class="font-size-13 text-muted">{{ project.photo_file_size
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="file" style="min-width: 200px;">
+                                    <a href="{{ url_for('static', filename='uploads/' + project.revit_file) }}"
+                                        download>
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-icon avatar-blue rounded m-r-15">
+                                                <i class="anticon anticon-file-add font-size-20"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">{{ project.revit_file }}</h6>
+                                                <span class="font-size-13 text-muted">{{ project.revit_file_size
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="file" style="min-width: 200px;">
+                                    <a href="{{ url_for('static', filename='uploads/' + project.excel_file) }}"
+                                        download>
+                                        <div class="media align-items-center">
+                                            <div class="avatar avatar-icon avatar-gold rounded m-r-15">
+                                                <i class="anticon anticon-file-excel font-size-20"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0">{{ project.excel_file }}</h6>
+                                                <span class="font-size-13 text-muted">{{ project.excel_file_size
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div class="media align-items-center">
+                                <div class="avatar avatar-image rounded">
+                                    <i class="anticon anticon-book font-size-15 text-primary"></i>
+                                </div>
+                                <div class="m-l-10">
+                                    <h4 class="m-b-0">WBS</h4>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('project.index') }}" class="badge badge-cyan"
+                                    style="font-size: 15px;" title="Back"><i class="anticon anticon-arrow-left"></i></a>
+                                </a>
+                                <a href="#" class="badge badge-blue" data-toggle="modal" data-target="#createModal"
+                                    style="font-size: 15px;" title="Back"><i class="anticon anticon-plus"></i></a>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="m-t-30">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Created Date</th>
+                                            <th>Finished Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for header in headers %}
+                                        <tr>
+                                            <td>
+                                                {{ header.id }}
+                                            </td>
+                                            <td>
+                                                {{ header.name }}
+                                            </td>
+                                            <td>
+                                                {% if header.created_at %}
+                                                {{ header.created_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if header.updated_at %}
+                                                {{ header.updated_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ url_for('project.wbs_detail', id=project.id, header_id=header.id) }}"
+                                                    class="badge badge-cyan" style="font-size: 15px;" title="Detail"><i
+                                                        class="anticon anticon-eye"></i></a>
+                                                <a href="#" class="badge badge-blue" data-toggle="modal"
+                                                    data-target="#editModal{{ header.id }}" style="font-size: 15px;"
+                                                    title="Back"><i class="anticon anticon-edit"></i></a>
+                                                </a>
+                                                <a href="#" class="badge badge-red btn-delete-header-wbs"
+                                                    style="font-size: 15px;" title="Delete"
+                                                    data-header-wbs-id="{{ header.id }}"><i
+                                                        class="anticon anticon-delete"></i></a>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="editModal{{ header.id }}">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <form action="{{ url_for('project.wbs_update', id=header.id) }}"
+                                                        method="POST">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editModalTitle">Edit</h5>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <i class="anticon anticon-close"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="">Created Date</label>
+                                                                <input type="text" class="form-control" id="wbs_name"
+                                                                    name="wbs_name" placeholder="WBS Name"
+                                                                    value="{{ header.name }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Created Date</label>
+                                                                <input type="date" class="form-control"
+                                                                    id="wbs_created_at"
+                                                                    name="wbs_created_at"
+                                                                    placeholder="Created Date"
+                                                                    value="{{ header.created_at }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Finished Date</label>
+                                                                <input type="date" class="form-control"
+                                                                    id="wbs_updated_at"
+                                                                    name="wbs_updated_at"
+                                                                    placeholder="Finished Date"
+                                                                    value="{{ header.updated_at }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ url_for('project.wbs_store', id=project.id) }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalTitle">Create</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="wbs_name" name="wbs_name" placeholder="WBS Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Content Wrapper END -->
+<!-- Bower JS -->
+<script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script>
+    // Fungsi untuk mengirimkan request AJAX ketika tombol delete diklik
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.btn-delete-project');
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const projectId = button.getAttribute('data-project-id');
+
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/project/delete/${projectId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
+
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('project.index') }}';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.btn-delete-header-wbs');
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const headerId = button.getAttribute('data-header-wbs-id');
+
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/project/wbs/${headerId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
+
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('project.detail', id=project.id) }}';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
+
+{% endblock %}

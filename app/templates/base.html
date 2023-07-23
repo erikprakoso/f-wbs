@@ -7,16 +7,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Your App</title>
+    <title>Aplikasi Analisis Risiko Kecelakaan Kerja Pada Proyek</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/logo/favicon.png') }}">
 
     <!-- Bower CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
 
     <!-- Include the DataTables CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
 
     <!-- Core CSS -->
     <link href="{{ url_for('static', filename='assets/css/app.min.css') }}" rel="stylesheet">
@@ -29,15 +31,17 @@
             <!-- Header START -->
             <div class="header">
                 <div class="logo logo-dark">
-                    <a href="{{ url_for('home.index') }}">
-                        <img src="{{ url_for('static', filename='assets/images/logo/logo.png') }}" alt="Logo">
-                        <img class="logo-fold" src="{{ url_for('static', filename='assets/images/logo/logo-fold.png') }}" alt="Logo">
+                    <a href="{{ url_for('project.index') }}">
+                        <img src="{{ url_for('static', filename='assets/images/logo/logo-uns.png') }}" alt="Logo" style="width: 20%; height: 20%; margin-top: 2%;">
+                        <img class="logo-fold"
+                            src="{{ url_for('static', filename='assets/images/logo/logo-uns.png') }}" alt="Logo" style="width: 80%; height: 80%; margin-top: 2%; margin-left: 10%;">
                     </a>
                 </div>
                 <div class="logo logo-white">
-                    <a href="{{ url_for('home.index') }}">
-                        <img src="{{ url_for('static', filename='assets/images/logo/logo-white.png') }}" alt="Logo">
-                        <img class="logo-fold" src="{{ url_for('static', filename='assets/images/logo/logo-fold-white.png') }}" alt="Logo">
+                    <a href="{{ url_for('project.index') }}">
+                        <img src="{{ url_for('static', filename='assets/images/logo/logo-uns.png') }}" alt="Logo" style="width: 20%; height: 20%; margin-top: 2%;">
+                        <img class="logo-fold"
+                            src="{{ url_for('static', filename='assets/images/logo/logo-uns.png') }}" alt="Logo" style="width: 20%; height: 20%; margin-top: 2%;">
                     </a>
                 </div>
                 <div class="nav-wrap">
@@ -55,13 +59,12 @@
                     </ul>
                     <ul class="nav-right">
                         <li class="dropdown dropdown-animated scale-left">
-                            <div class="pointer" data-toggle="dropdown">
-                                <div class="avatar avatar-image  m-h-10 m-r-15">
-                                    <img src="{{ url_for('static', filename='assets/images/avatars/thumb-3.jpg') }}" alt="">
+                            <div class="pointer d-flex align-items-center" data-toggle="dropdown">
+                                <span class="m-r-10">{{ session['name'] }} - {{ session['institute'] }}</span>
+                                <div class="avatar avatar-image m-h-10 m-r-15">
+                                    <img src="{{ url_for('static', filename='assets/images/avatars/thumb-12.png') }}" alt="">
                                 </div>
                             </div>
-                        
-
                             <div class="p-b-15 p-t-20 dropdown-menu pop-profile">
                                 <a href="{{ url_for('auth.logout') }}" class="dropdown-item d-block p-h-15 p-v-10">
                                     <div class="d-flex align-items-center justify-content-between">
@@ -84,43 +87,58 @@
             </div>
             <!-- Header END -->
 
-             <!-- Side Nav START -->
+            <!-- Side Nav START -->
             <div class="side-nav">
                 <div class="side-nav-inner">
                     <ul class="side-nav-menu scrollable">
                         <li class="nav-item">
-                            <a href="{{ url_for('home.index') }}">
+                            <a href="{{ url_for('project.index') }}">
                                 <span class="icon-holder">
                                     <i class="anticon anticon-home"></i>
                                 </span>
-                                <span class="title">Home</span>
+                                <span class="title">Project</span>
                             </a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" href="javascript:void(0);">
+                        {% if session['name'] == 'Admin' %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('wbs.wbs') }}">
                                 <span class="icon-holder">
-                                    <i class="anticon anticon-table"></i>
+                                    <i class="anticon anticon-menu-fold"></i>
                                 </span>
-                                <span class="title">Tables</span>
-                                <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
+                                <span class="title">WBS</span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="basic-table.html">Basic Table</a>
-                                </li>
-                                <li class="active">
-                                    <a href="data-table.html">Data Table</a>
-                                </li>
-                            </ul>
+                        </li>                                                                       
+                        <li class="nav-item">
+                            <a href="{{ url_for('sheet_name.sheets') }}">
+                                <span class="icon-holder">
+                                    <i class="anticon anticon-menu-unfold"></i>
+                                </span>
+                                <span class="title">Sheet Name</span>
+                            </a>
                         </li>
+                        {% endif %}                                                                       
                     </ul>
                 </div>
             </div>
-            <!-- Side Nav END -->
-            {% block content %}
-            {% endblock %}
+            <!-- Page Container START -->
+            <div class="page-container">
+                <!-- Side Nav END -->
+                {% block content %}
+                {% endblock %}
+                <!-- Footer START -->
+                <footer class="footer">
+                    <div class="footer-content">
+                        <p class="m-b-0">Copyright © 2019 Theme_Nate. All rights reserved.</p>
+                        <span>
+                            <a href="#" class="text-gray m-r-15">Term &amp; Conditions</a>
+                            <a href="#" class="text-gray">Privacy &amp; Policy</a>
+                        </span>
+                    </div>
+                </footer>
+                <!-- Footer END -->
+
+            </div>
+            <!-- Page Container END -->
             <!-- Quick View START -->
             <div class="modal modal-right fade quick-view" id="quick-view">
                 <div class="modal-dialog">
@@ -191,8 +209,10 @@
     <script src="{{ url_for('static', filename='assets/js/vendors.min.js') }}"></script>
 
     <!-- Page JS -->
-    <script src="{{ url_for('static', filename='bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/pages/datatables.js') }}"></script>
 
     <!-- Core JS -->
