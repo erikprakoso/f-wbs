@@ -59,10 +59,10 @@
                     </ul>
                     <ul class="nav-right">
                         <li class="dropdown dropdown-animated scale-left">
-                            <div class="pointer" data-toggle="dropdown">
-                                <div class="avatar avatar-image  m-h-10 m-r-15">
-                                    <img src="{{ url_for('static', filename='assets/images/avatars/thumb-12.png') }}"
-                                        alt="">
+                            <div class="pointer d-flex align-items-center" data-toggle="dropdown">
+                                <span class="m-r-10">{{ session['name'] }} - {{ session['institute'] }}</span>
+                                <div class="avatar avatar-image m-h-10 m-r-15">
+                                    <img src="{{ url_for('static', filename='assets/images/avatars/thumb-12.png') }}" alt="">
                                 </div>
                             </div>
                             <div class="p-b-15 p-t-20 dropdown-menu pop-profile">

@@ -133,6 +133,9 @@
                                 <a href="{{ url_for('project.index') }}" class="badge badge-cyan"
                                     style="font-size: 15px;" title="Back"><i class="anticon anticon-arrow-left"></i></a>
                                 </a>
+                                <a href="#" class="badge badge-blue" data-toggle="modal" data-target="#createModal"
+                                    style="font-size: 15px;" title="Back"><i class="anticon anticon-plus"></i></a>
+                                </a>
                             </div>
                         </div>
                         <div class="m-t-30">
@@ -142,6 +145,8 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
+                                            <th>Created Date</th>
+                                            <th>Finished Date</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -155,11 +160,60 @@
                                                 {{ header.name }}
                                             </td>
                                             <td>
+                                                {% if header.created_at %}
+                                                {{ header.created_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if header.updated_at %}
+                                                {{ header.updated_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
+                                            </td>
+                                            <td>
                                                 <a href="{{ url_for('project.wbs_detail', id=project.id, header_id=header.id) }}"
-                                                    class="badge badge-blue" style="font-size: 15px;" title="Detail"><i
+                                                    class="badge badge-cyan" style="font-size: 15px;" title="Detail"><i
                                                         class="anticon anticon-eye"></i></a>
+                                                <a href="#" class="badge badge-blue" data-toggle="modal"
+                                                    data-target="#editModal{{ header.id }}" style="font-size: 15px;"
+                                                    title="Back"><i class="anticon anticon-edit"></i></a>
+                                                </a>
+                                                <a href="#" class="badge badge-red btn-delete-header-wbs"
+                                                    style="font-size: 15px;" title="Delete"
+                                                    data-header-wbs-id="{{ header.id }}"><i
+                                                        class="anticon anticon-delete"></i></a>
                                             </td>
                                         </tr>
+
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="editModal{{ header.id }}">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <form action="{{ url_for('project.wbs_update', id=header.id) }}"
+                                                        method="POST">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editModalTitle">Edit</h5>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <i class="anticon anticon-close"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="text" class="form-control" id="wbs_name"
+                                                                name="wbs_name" placeholder="WBS Name"
+                                                                value="{{ header.name }}">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -168,6 +222,28 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Create Modal -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ url_for('project.wbs_store', id=project.id) }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalTitle">Create</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="wbs_name" name="wbs_name" placeholder="WBS Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -198,6 +274,38 @@
                         // Jika berhasil, redirect ke halaman index proyek
                         if (data.message === 'Data deleted successfully.') {
                             window.location.href = '{{ url_for('project.index') }}';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.btn-delete-header-wbs');
+
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const headerId = button.getAttribute('data-header-wbs-id');
+
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/project/wbs/${headerId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
+
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('project.detail', id=project.id) }}';
                         }
                     })
                     .catch((error) => {

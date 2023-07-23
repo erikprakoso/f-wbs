@@ -14,18 +14,13 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <h4>WBS</h4>
-                <div class="dropdown dropdown-animated scale-left">
-                    <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
-                        <i class="anticon anticon-ellipsis"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createModal">
-                            <i class="anticon anticon-plus"></i>
-                            <span class="m-l-10">Create</span>
-                        </button>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>WBS</h5>
+                <div>
+                    <button class="btn btn-sm btn-default" type="button" data-toggle="modal" data-target="#createModal">
+                        <i class="anticon anticon-plus"></i>
+                        Create
+                    </button>
                 </div>
             </div>
             <div class="m-t-25">
@@ -70,8 +65,8 @@
                                     <i class="anticon anticon-eye"></i>
                                 </a>
                                 <a href="#" class="badge badge-blue btn-edit-wbs" data-toggle="modal"
-                                    data-target="#editModal" data-wbs-id="{{ wb.id }}"
-                                    data-wbs-name="{{ wb.name }}" style="font-size: 15px;" title="Edit">
+                                    data-target="#editModal" data-wbs-id="{{ wb.id }}" data-wbs-name="{{ wb.name }}"
+                                    style="font-size: 15px;" title="Edit">
                                     <i class="anticon anticon-edit"></i>
                                 </a>
                                 <a href="#" class="badge badge-red btn-delete-wbs" style="font-size: 15px;"
@@ -142,8 +137,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" id="wbs_edit" name="wbs_edit"
-                        placeholder="WBS Name">
+                    <input type="text" class="form-control" id="wbs_edit" name="wbs_edit" placeholder="WBS Name">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -201,17 +195,17 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
         })
-        .then((response) => response.json())
-        .then((data) => {
-            alert(data.message);
-            if (data.message === 'Data updated successfully.') {
-                // Reload the table after updating the wbs name
-                fetchWbsNames();
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                alert(data.message);
+                if (data.message === 'Data updated successfully.') {
+                    // Reload the table after updating the wbs name
+                    fetchWbsNames();
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
     function fetchWbsNames() {
@@ -220,14 +214,14 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
         })
-        .then((response) => response.text())
-        .then((data) => {
-            // Update the table body with the new data
-            document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+            .then((response) => response.text())
+            .then((data) => {
+                // Update the table body with the new data
+                document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
     // Function to display the edit modal with the selected wbs name data

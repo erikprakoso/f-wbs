@@ -19,6 +19,8 @@ def login():
 
         if user and user.password == password:
             session['email'] = email
+            session['name'] = user.name
+            session['institute'] = user.institute
             flash('Login successful!', 'success')
             return redirect(url_for('project.index'))
 

@@ -15,7 +15,13 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <h4>Project</h4>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Project</h5>
+                <div>
+                    <a href="{{ url_for('project.index') }}" class="btn btn-sm btn-default"><i class="anticon anticon-arrow-left"></i>
+                        Back</a>
+                </div>
+            </div>
             <p></p>
             <div class="m-t-25">
                 <form id="projectForm" enctype="multipart/form-data">

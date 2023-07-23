@@ -14,18 +14,16 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <h4>Sheet Name</h4>
-                <div class="dropdown dropdown-animated scale-left">
-                    <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
-                        <i class="anticon anticon-ellipsis"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createModal">
-                            <i class="anticon anticon-plus"></i>
-                            <span class="m-l-10">Create</span>
-                        </button>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <h5 class="m-r-10">Sheet Name</h5>
+                    <code class="m-r-10">(Nama sheet wajib sama karena case sensitive)</code>
+                </div>
+                <div>
+                    <button type="button" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-default">
+                        <i class="anticon anticon-plus"></i>
+                        Create
+                    </button>
                 </div>
             </div>
             <div class="m-t-25">
@@ -179,17 +177,17 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
         })
-        .then((response) => response.json())
-        .then((data) => {
-            alert(data.message);
-            if (data.message === 'Data updated successfully.') {
-                // Reload the table after updating the sheet name
-                fetchSheetNames();
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                alert(data.message);
+                if (data.message === 'Data updated successfully.') {
+                    // Reload the table after updating the sheet name
+                    fetchSheetNames();
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
     function fetchSheetNames() {
@@ -198,14 +196,14 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
         })
-        .then((response) => response.text())
-        .then((data) => {
-            // Update the table body with the new data
-            document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+            .then((response) => response.text())
+            .then((data) => {
+                // Update the table body with the new data
+                document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
     // Function to display the edit modal with the selected sheet name data

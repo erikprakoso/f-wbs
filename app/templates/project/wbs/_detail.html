@@ -20,8 +20,20 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5>WBS Header</h5>
+                        <div class="d-flex justify-content-between">
+                            <div class="media align-items-center">
+                                <div class="avatar avatar-image rounded">
+                                    <i class="anticon anticon-book font-size-15 text-primary"></i>
+                                </div>
+                                <div class="m-l-10">
+                                    <h4 class="m-b-0">WBS Header</h4>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('project.detail', id=project.id) }}"
+                                    class="btn btn-sm btn-default"><i class="anticon anticon-arrow-left"></i>
+                                    Back</a>
+                            </div>
                         </div>
                         <div class="m-t-30">
                             <div class="table-responsive">
@@ -32,7 +44,6 @@
                                             <th>Name</th>
                                             <th>Created Date</th>
                                             <th>Finished Date</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -44,16 +55,18 @@
                                                 {{ header.name }}
                                             </td>
                                             <td>
-                                                {{ header.created_at }}
+                                                {% if header.created_at %}
+                                                {{ header.created_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
                                             </td>
                                             <td>
-                                                {{ header.updated_at }}
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-default btn-create-date"
-                                                    data-header-id="{{ header.id }}">Created Date</button>
-                                                <button class="btn btn-sm btn-default btn-finish-date"
-                                                    data-header-id="{{ header.id }}">Finished Date</button>
+                                                {% if header.updated_at %}
+                                                {{ header.updated_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -66,8 +79,22 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5>WBS Detail</h5>
+                        <div class="d-flex justify-content-between">
+                            <div class="media align-items-center">
+                                <div class="avatar avatar-image rounded">
+                                    <i class="anticon anticon-book font-size-15 text-primary"></i>
+                                </div>
+                                <div class="m-l-10">
+                                    <h4 class="m-b-0">WBS Detail</h4>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-default" type="button" data-toggle="modal"
+                                    data-target="#createDetailModal">
+                                    <i class="anticon anticon-plus"></i>
+                                    Create
+                                </button>
+                            </div>
                         </div>
                         <div class="m-t-30">
                             <div class="table-responsive">
@@ -92,20 +119,80 @@
                                                 {{ detail.name }}
                                             </td>
                                             <td>
-                                                {{ detail.created_at }}
+                                                {% if detail.created_at %}
+                                                {{ detail.created_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
                                             </td>
                                             <td>
-                                                {{ detail.updated_at }}
+                                                {% if detail.updated_at %}
+                                                {{ detail.updated_at.strftime('%d %b %Y') }}
+                                                {% else %}
+                                                No update date available
+                                                {% endif %}
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-default btn-create-date"
-                                                    data-detail-id="{{ detail.id }}">Created Date</button>
-                                                <button class="btn btn-sm btn-default btn-finish-date"
-                                                    data-detail-id="{{ detail.id }}">Finished Date</button>
+                                                <a href="#" class="badge badge-blue" data-toggle="modal"
+                                                    data-target="#editDetailModal{{ detail.id }}"
+                                                    style="font-size: 15px;" title="Back"><i
+                                                        class="anticon anticon-edit"></i></a>
+                                                </a>
+                                                <a href="#" class="badge badge-red btn-delete-detail-wbs"
+                                                    style="font-size: 15px;" title="Delete"
+                                                    data-detail-wbs-id="{{ detail.id }}"><i
+                                                        class="anticon anticon-delete"></i></a>
                                             </td>
                                         </tr>
                                         <tr id="detail-{{ detail.id }}" class="collapse">
                                             <td colspan="5">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="media align-items-center">
+                                                        <div class="avatar avatar-image rounded">
+                                                            <i
+                                                                class="anticon anticon-book font-size-15 text-primary"></i>
+                                                        </div>
+                                                        <div class="m-l-10">
+                                                            <h4 class="m-b-0">WBS Item</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-default" type="button"
+                                                            data-toggle="modal" data-target="#createItemModal{{ detail.id }}">
+                                                            <i class="anticon anticon-plus"></i>
+                                                            Create
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="createItemModal{{ detail.id }}">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <form
+                                                                action="{{ url_for('project.wbs_item_store', id=project.id, header_id=header.id, detail_id=detail.id) }}"
+                                                                method="POST">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="createItemModalTitle">
+                                                                        Create Item</h5>
+                                                                    <button type="button" class="close"
+                                                                        data-dismiss="modal">
+                                                                        <i class="anticon anticon-close"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <input type="text" class="form-control"
+                                                                        id="wbs_item_name" name="wbs_item_name"
+                                                                        placeholder="WBS Name">
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default"
+                                                                        data-dismiss="modal">Close</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Save</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
@@ -126,23 +213,133 @@
                                                                 {{ item.name }}
                                                             </td>
                                                             <td>
-                                                                {{ item.created_at }}
+                                                                {% if item.created_at %}
+                                                                {{ item.created_at.strftime('%d %b %Y') }}
+                                                                {% else %}
+                                                                No update date available
+                                                                {% endif %}
                                                             </td>
                                                             <td>
-                                                                {{ item.updated_at }}
+                                                                {% if item.updated_at %}
+                                                                {{ item.updated_at.strftime('%d %b %Y') }}
+                                                                {% else %}
+                                                                No update date available
+                                                                {% endif %}
                                                             </td>
                                                             <td>
-                                                                <button class="btn btn-sm btn-default btn-create-date"
-                                                                    data-item-id="{{ item.id }}">Created Date</button>
-                                                                <button class="btn btn-sm btn-default btn-finish-date"
-                                                                    data-item-id="{{ item.id }}">Finished Date</button>
+                                                                <a href="#" class="badge badge-blue" data-toggle="modal"
+                                                                    data-target="#editItemlModal{{ item.id }}"
+                                                                    style="font-size: 15px;" title="Back"><i
+                                                                        class="anticon anticon-edit"></i></a>
+                                                                </a>
+                                                                <a href="#" class="badge badge-red btn-delete-item-wbs"
+                                                                    style="font-size: 15px;" title="Delete"
+                                                                    data-item-wbs-id="{{ item.id }}"><i
+                                                                        class="anticon anticon-delete"></i></a>
                                                             </td>
                                                         </tr>
+                                                        <div class="modal fade" id="editItemlModal{{ item.id }}">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <form
+                                                                        action="{{ url_for('project.wbs_item_update', id=project.id, header_id=header.id, detail_id=detail.id, item_id=item.id) }}"
+                                                                        method="POST">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="editModalTitle">
+                                                                                Edit Item</h5>
+                                                                            <button type="button" class="close"
+                                                                                data-dismiss="modal">
+                                                                                <i class="anticon anticon-close"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="form-group">
+                                                                                <label for="">Name</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    id="wbs_item_name"
+                                                                                    name="wbs_item_name"
+                                                                                    placeholder="WBS Name"
+                                                                                    value="{{ item.name }}">
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="">Created Date</label>
+                                                                                <input type="date" class="form-control"
+                                                                                    id="wbs_item_created_at"
+                                                                                    name="wbs_item_created_at"
+                                                                                    placeholder="Created Date"
+                                                                                    value="{{ item.created_at }}">
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <label for="">Finished Date</label>
+                                                                                <input type="date" class="form-control"
+                                                                                    id="wbs_item_updated_at"
+                                                                                    name="wbs_item_updated_at"
+                                                                                    placeholder="Finished Date"
+                                                                                    value="{{ item.updated_at }}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button"
+                                                                                class="btn btn-default"
+                                                                                data-dismiss="modal">Close</button>
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary">Save</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>
                                             </td>
                                         </tr>
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="editDetailModal{{ detail.id }}">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <form
+                                                        action="{{ url_for('project.wbs_detail_update', id=project.id, header_id=header.id, detail_id=detail.id) }}"
+                                                        method="POST">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editModalTitle">Edit Detail</h5>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <i class="anticon anticon-close"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="">Name</label>
+                                                                <input type="text" class="form-control"
+                                                                    id="wbs_detail_name" name="wbs_detail_name"
+                                                                    placeholder="WBS Name" value="{{ detail.name }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Created Date</label>
+                                                                <input type="date" class="form-control"
+                                                                    id="wbs_detail_created_at"
+                                                                    name="wbs_detail_created_at"
+                                                                    placeholder="Created Date"
+                                                                    value="{{ detail.created_at }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Finished Date</label>
+                                                                <input type="date" class="form-control"
+                                                                    id="wbs_detail_updated_at"
+                                                                    name="wbs_detail_updated_at"
+                                                                    placeholder="Finished Date"
+                                                                    value="{{ detail.updated_at }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -155,6 +352,29 @@
     </div>
 </div>
 <!-- Content Wrapper END -->
+<!-- Create Modal -->
+<div class="modal fade" id="createDetailModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ url_for('project.wbs_detail_store', id=project.id, header_id=header.id) }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createDetailModalTitle">Create Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="wbs_detail_name" name="wbs_detail_name"
+                        placeholder="WBS Name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- Bower JS -->
 <script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
 <script>
@@ -172,77 +392,66 @@
     });
 </script>
 <script>
-    // Fungsi untuk mengirimkan request AJAX ketika tombol delete diklik
     document.addEventListener('DOMContentLoaded', function () {
-        const createButton = document.querySelectorAll('.btn-create-date');
+        const deleteDetailButtons = document.querySelectorAll('.btn-delete-detail-wbs');
 
-        createButton.forEach(function (button) {
+        deleteDetailButtons.forEach(function (button) {
             button.addEventListener('click', function () {
-                if (button.getAttribute('data-header-id')) {
-                    const headerId = button.getAttribute('data-header-id');
-                    const type = 'header';
-                    const date = 'created';
+                const detailId = button.getAttribute('data-detail-wbs-id');
 
-                    // Kirim request AJAX menggunakan fetch API
-                    fetch(`/project/${headerId}/wbs/${type}/date/${date}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // Tampilkan pesan sukses atau gagal
-                            alert(data.message);
-                            window.location.reload();
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
-                }
-                else if (button.getAttribute('data-detail-id')) {
-                    const detailId = button.getAttribute('data-detail-id');
-                    const type = 'detail';
-                    const date = 'created';
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/project/wbs/detail/${detailId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
 
-                    // Kirim request AJAX menggunakan fetch API
-                    fetch(`/project/${detailId}/wbs/${type}/date/${date}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('project.wbs_detail', id=project.id, header_id=header.id) }}';
+                        }
                     })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // Tampilkan pesan sukses atau gagal
-                            alert(data.message);
-                            window.location.reload();
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
-                } else if (button.getAttribute('data-item-id')) {
-                    const itemId = button.getAttribute('data-item-id');
-                    const type = 'item';
-                    const date = 'created';
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
 
-                    // Kirim request AJAX menggunakan fetch API
-                    fetch(`/project/${itemId}/wbs/${type}/date/${date}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteItemButtons = document.querySelectorAll('.btn-delete-item-wbs');
+
+        deleteItemButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const itemId = button.getAttribute('data-item-wbs-id');
+
+                // Kirim request AJAX menggunakan fetch API
+                fetch(`/project/wbs/item/${itemId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Tampilkan pesan sukses atau gagal
+                        alert(data.message);
+
+                        // Jika berhasil, redirect ke halaman index proyek
+                        if (data.message === 'Data deleted successfully.') {
+                            window.location.href = '{{ url_for('project.wbs_detail', id=project.id, header_id=header.id) }}';
+                        }
                     })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // Tampilkan pesan sukses atau gagal
-                            alert(data.message);
-                            window.location.reload();
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
-                }
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
             });
         });
     });

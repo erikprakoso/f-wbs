@@ -5,8 +5,8 @@ class WbsItemProject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     wbs_detail_project_id = db.Column(db.Integer, db.ForeignKey('wbs_detail_project.id'), nullable=False)
-    created_at = db.Column(db.DateTime)
-    updated_at = db.Column(db.DateTime)
+    created_at = db.Column(db.Date)
+    updated_at = db.Column(db.Date)
 
     def __repr__(self):
         return '<WbsItemProject {}>'.format(self.name)

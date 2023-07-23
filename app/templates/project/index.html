@@ -14,18 +14,12 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <h4>Project</h4>
-                <div class="dropdown dropdown-animated scale-left">
-                    <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
-                        <i class="anticon anticon-ellipsis"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="{{ url_for('project.create') }}" class="dropdown-item">
-                            <i class="anticon anticon-plus"></i>
-                            <span class="m-l-10">Create</span>
-                        </a>
-                    </div>                    
+            <div class="d-flex justify-content-between align-items-center">
+                <h5>Project</h5>
+                <div>
+                    <a href="{{ url_for('project.create') }}" class="btn btn-sm btn-default">
+                        <i class="anticon anticon-plus"></i>
+                        Create</a>
                 </div>
             </div>
             <div class="m-t-25">

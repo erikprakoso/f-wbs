@@ -12,6 +12,7 @@ from app.models.wbs_detail_project import WbsDetailProject
 from app.models.wbs_item_project import WbsItemProject
 import pandas as pd
 from sqlalchemy import and_
+from datetime import datetime
 
 project_bp = Blueprint('project', __name__)
 
@@ -82,43 +83,6 @@ def wbs_detail(id, header_id):
         detail.items = detail_items  # Assign the list of items to the detail
 
     return render_template('project/wbs/_detail.html', project=project, header=header, details=details)
-
-
-@project_bp.route('/project/<int:id>/wbs/<string:type>/date/<string:date>', methods=['POST'])
-def wbs_date(id, type, date):
-    if 'email' not in session:
-        return redirect(url_for('auth.login'))
-
-    if type == 'header':
-        if date == 'created':
-            header = WbsHeaderProject.query.get(id)
-            header.created_at = db.func.current_timestamp()
-            db.session.commit()
-        elif date == 'updated':
-            header = WbsHeaderProject.query.get(id)
-            header.updated_at = db.func.current_timestamp()
-            db.session.commit()
-    elif type == 'detail':
-        if date == 'created':
-            detail = WbsDetailProject.query.get(id)
-            detail.created_at = db.func.current_timestamp()
-            db.session.commit()
-        elif date == 'updated':
-            detail = WbsDetailProject.query.get(id)
-            detail.updated_at = db.func.current_timestamp()
-            db.session.commit()
-    elif type == 'item':
-        if date == 'created':
-            item = WbsItemProject.query.get(id)
-            item.created_at = db.func.current_timestamp()
-            db.session.commit()
-        elif date == 'updated':
-            item = WbsItemProject.query.get(id)
-            item.updated_at = db.func.current_timestamp()
-            db.session.commit()
-    
-    return jsonify({'message': 'Data updated successfully.'})
-
 
 
 @project_bp.route('/project/edit/<int:id>')
@@ -526,3 +490,142 @@ def store_multiple_sheet(id, excel_file):
                     print('Not found')
 
     return desired_values
+
+@project_bp.route('/project/<int:id>/wbs/store', methods=['POST'])
+def wbs_store(id):
+    if 'email' not in session:
+        return redirect(url_for('auth.login'))
+
+    wbs = WbsHeaderProject()
+    wbs.name = request.form['wbs_name']
+    wbs.project_id = id
+    db.session.add(wbs)
+    db.session.commit()
+
+    return redirect(url_for('project.detail', id=id))
+
+
+@project_bp.route('/project/wbs/<int:id>/delete', methods=['POST'])
+def wbs_delete(id):
+    wbs = WbsHeaderProject.query.get(id)
+    db.session.delete(wbs)
+    db.session.commit()
+
+    return jsonify({'message': 'Data deleted successfully.'})
+
+
+@project_bp.route('/project/wbs/<int:id>/update', methods=['POST'])
+def wbs_update(id):
+    # Get the WBS name from the form data
+    updated_name = request.form['wbs_name']
+
+    # Find the WBS by ID and update its name
+    wbs = WbsHeaderProject.query.get(id)
+    if wbs:
+        wbs.name = updated_name
+        db.session.commit()
+        return redirect(url_for('project.detail', id=wbs.project_id))
+    else:
+        return jsonify({'message': 'WBS not found.'}), 404
+    
+
+@project_bp.route('/project/<int:id>/wbs/<int:header_id>/header/store', methods=['POST'])
+def wbs_detail_store(id, header_id):
+    if 'email' not in session:
+        return redirect(url_for('auth.login'))
+
+    wbs_detail = WbsDetailProject()
+    wbs_detail.name = request.form['wbs_detail_name']
+    wbs_detail.wbs_header_project_id = header_id
+    db.session.add(wbs_detail)
+    db.session.commit()
+
+    return redirect(url_for('project.wbs_detail', id=id, header_id=header_id))
+
+
+@project_bp.route('/project/wbs/detail/<int:id>/delete', methods=['POST'])
+def wbs_detail_delete(id):
+    wbs_detail = WbsDetailProject.query.get(id)
+    db.session.delete(wbs_detail)
+    db.session.commit()
+
+    return jsonify({'message': 'Data deleted successfully.'})
+
+
+@project_bp.route('/project/<int:id>/wbs/<int:header_id>/header/<int:detail_id>/detail/update', methods=['POST'])
+def wbs_detail_update(id, header_id, detail_id):
+    # Get the WBS name from the form data
+    updated_name = request.form['wbs_detail_name']
+    created_at_str = request.form['wbs_detail_created_at']
+    updated_at_str = request.form['wbs_detail_updated_at']
+
+    created_at = None
+    updated_at = None
+
+    if created_at_str and created_at_str.strip():
+        created_at = datetime.strptime(created_at_str, '%Y-%m-%d')
+
+    if updated_at_str and updated_at_str.strip():
+        updated_at = datetime.strptime(updated_at_str, '%Y-%m-%d')
+
+    # Find the WBS by ID and update its name and dates
+    wbs_detail = WbsDetailProject.query.get(detail_id)
+    if wbs_detail:
+        wbs_detail.name = updated_name
+        wbs_detail.created_at = created_at
+        wbs_detail.updated_at = updated_at
+        db.session.commit()
+        return redirect(url_for('project.wbs_detail', id=id, header_id=header_id))
+    else:
+        return jsonify({'message': 'WBS Detail not found.'}), 404
+
+
+@project_bp.route('/project/<int:id>/wbs/<int:header_id>/header/<int:detail_id>/detail/store', methods=['POST'])
+def wbs_item_store(id, header_id, detail_id):
+    if 'email' not in session:
+        return redirect(url_for('auth.login'))
+
+    wbs_item = WbsItemProject()
+    wbs_item.name = request.form['wbs_item_name']
+    wbs_item.wbs_detail_project_id = detail_id
+    db.session.add(wbs_item)
+    db.session.commit()
+
+    return redirect(url_for('project.wbs_detail', id=id, header_id=header_id))
+
+
+@project_bp.route('/project/wbs/item/<int:id>/delete', methods=['POST'])
+def wbs_item_delete(id):
+    wbs_item = WbsItemProject.query.get(id)
+    db.session.delete(wbs_item)
+    db.session.commit()
+
+    return jsonify({'message': 'Data deleted successfully.'})
+
+
+@project_bp.route('/project/<int:id>/wbs/<int:header_id>/header/<int:detail_id>/detail/<int:item_id>/update', methods=['POST'])
+def wbs_item_update(id, header_id, detail_id, item_id):
+    # Get the WBS name from the form data
+    updated_name = request.form['wbs_item_name']
+    created_at_str = request.form['wbs_item_created_at']
+    updated_at_str = request.form['wbs_item_updated_at']
+
+    created_at = None
+    updated_at = None
+
+    if created_at_str and created_at_str.strip():
+        created_at = datetime.strptime(created_at_str, '%Y-%m-%d')
+
+    if updated_at_str and updated_at_str.strip():
+        updated_at = datetime.strptime(updated_at_str, '%Y-%m-%d')
+
+    # Find the WBS by ID and update its name and dates
+    wbs_item = WbsItemProject.query.get(item_id)
+    if wbs_item:
+        wbs_item.name = updated_name
+        wbs_item.created_at = created_at
+        wbs_item.updated_at = updated_at
+        db.session.commit()
+        return redirect(url_for('project.wbs_detail', id=id, header_id=header_id))
+    else:
+        return jsonify({'message': 'WBS Item not found.'}), 404

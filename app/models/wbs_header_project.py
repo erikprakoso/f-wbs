@@ -5,8 +5,8 @@ class WbsHeaderProject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
-    created_at = db.Column(db.DateTime)
-    updated_at = db.Column(db.DateTime)
+    created_at = db.Column(db.Date)
+    updated_at = db.Column(db.Date)
     
     wbs_details = db.relationship('WbsDetailProject', backref='wbs_header_project', lazy=True, cascade='all, delete-orphan')
     
