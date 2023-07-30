@@ -293,6 +293,8 @@ def update(id):
             project.excel_file = excel_filename
             project.excel_file_size = excel_file_size_formatted
 
+            update_multiple_sheet(id, excel_file)
+
         if photo_file.filename != '':
             # Hapus file lama dari sistem file
             if project.photo_file:
@@ -335,8 +337,6 @@ def update(id):
 
         # Commit to database
         db.session.commit()
-
-        wbs = update_multiple_sheet(id, excel_file)
 
         return jsonify({'message': 'Data updated successfully.'})
     else:
@@ -397,7 +397,7 @@ def store_multiple_sheet(id, excel_file):
                 print('header', header.id)
                 print('header', header.name)
                 
-                get_project_header = WbsHeaderProject.query.filter(WbsHeaderProject.name.ilike(header.name, project_id=id)).first()
+                get_project_header = WbsHeaderProject.query.filter(and_(WbsHeaderProject.name.ilike(header.name), WbsHeaderProject.project_id == id)).first()
                 if get_project_header:
                     print('get_project_header', get_project_header.id)
                     print('get_project_header', get_project_header.name)
@@ -549,7 +549,7 @@ def update_multiple_sheet(id, excel_file):
                 print('header', header.id)
                 print('header', header.name)
                 
-                get_project_header = WbsHeaderProject.query.filter(WbsHeaderProject.name.ilike(header.name, project_id=id)).first()
+                get_project_header = WbsHeaderProject.query.filter(and_(WbsHeaderProject.name.ilike(header.name), WbsHeaderProject.project_id == id)).first()
                 if get_project_header:
                     print('get_project_header', get_project_header.id)
                     print('get_project_header', get_project_header.name)
@@ -674,7 +674,9 @@ def wbs_update(id):
     # Get the WBS name from the form data
     updated_name = request.form['wbs_name']
     created_at_str = request.form['wbs_created_at']
+    print('created_at_str', created_at_str)
     updated_at_str = request.form['wbs_updated_at']
+    print('updated_at_str', updated_at_str)
 
     created_at = None
     updated_at = None
