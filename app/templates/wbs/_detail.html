@@ -15,19 +15,19 @@
                     <p class="text-muted m-b-0">ID: {{ wbs.id }}</p>
                 </div>
             </div>
-    
+
             <!-- Back link -->
             <div>
                 <a href="{{ url_for('wbs.wbs') }}" class="btn btn-link">Back</a>
             </div>
         </div>
-    
+
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#product-overview">Detail</a>
             </li>
         </ul>
-    </div>    
+    </div>
     <div class="container-fluid">
         <div class="tab-content m-t-15">
             <div class="tab-pane fade show active" id="product-overview">
@@ -36,15 +36,11 @@
                         <div class="d-flex justify-content-between">
                             <h4 class="card-title">WBS Detail</h4>
                             <div class="dropdown dropdown-animated scale-left">
-                                <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
-                                    <i class="anticon anticon-ellipsis"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createModal">
-                                        <i class="anticon anticon-plus"></i>
-                                        <span class="m-l-10">Create</span>
-                                    </button>
-                                </div>
+                                <button class="btn btn-sm btn-default" type="button" data-toggle="modal"
+                                    data-target="#createModal">
+                                    <i class="anticon anticon-plus"></i>
+                                    Create
+                                </button>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -84,13 +80,14 @@
                                             {{ wb.updated_at }}
                                         </td>
                                         <td>
-                                            <a href="{{ url_for('wbs.detail_item', id=wbs.id, detail_id=wb.id) }}" class="badge badge-green"
-                                                style="font-size: 15px;" title="Detail">
+                                            <a href="{{ url_for('wbs.detail_item', id=wbs.id, detail_id=wb.id) }}"
+                                                class="badge badge-green" style="font-size: 15px;" title="Detail">
                                                 <i class="anticon anticon-eye"></i>
                                             </a>
                                             <a href="#" class="badge badge-blue btn-edit-wbs" data-toggle="modal"
-                                                data-target="#editModal" data-wbs-id="{{ wb.id }}" data-wbs-code="{{ wb.code }}"
-                                                data-wbs-name="{{ wb.name }}" style="font-size: 15px;" title="Edit">
+                                                data-target="#editModal" data-wbs-id="{{ wb.id }}"
+                                                data-wbs-code="{{ wb.code }}" data-wbs-name="{{ wb.name }}"
+                                                style="font-size: 15px;" title="Edit">
                                                 <i class="anticon anticon-edit"></i>
                                             </a>
                                             <a href="#" class="badge badge-red btn-delete-wbs" style="font-size: 15px;"
@@ -171,10 +168,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="wbs_code_edit" name="wbs_code_edit" placeholder="WBS Code">
+                        <input type="text" class="form-control" id="wbs_code_edit" name="wbs_code_edit"
+                            placeholder="WBS Code">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="wbs_name_edit" name="wbs_name_edit" placeholder="WBS Name">
+                        <input type="text" class="form-control" id="wbs_name_edit" name="wbs_name_edit"
+                            placeholder="WBS Name">
                     </div>
                     <input type="text" id="wbs_header_id_edit" name="wbs_header_id_edit" value="{{ wbs.id }}" hidden>
                 </div>
@@ -235,17 +234,17 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
         })
-        .then((response) => response.json())
-        .then((data) => {
-            alert(data.message);
-            if (data.message === 'Data updated successfully.') {
-                // Reload the table after updating the wbs name
-                fetchWbsNames();
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                alert(data.message);
+                if (data.message === 'Data updated successfully.') {
+                    // Reload the table after updating the wbs name
+                    fetchWbsNames();
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
     function fetchWbsNames() {
@@ -254,14 +253,14 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
         })
-        .then((response) => response.text())
-        .then((data) => {
-            // Update the table body with the new data
-            document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+            .then((response) => response.text())
+            .then((data) => {
+                // Update the table body with the new data
+                document.getElementById('data-table').getElementsByTagName('tbody')[0].innerHTML = data;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
     // Function to display the edit modal with the selected wbs name data

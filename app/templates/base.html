@@ -128,7 +128,7 @@
                 <!-- Footer START -->
                 <footer class="footer">
                     <div class="footer-content">
-                        <p class="m-b-0">Copyright © 2019 Theme_Nate. All rights reserved.</p>
+                        <p class="m-b-0">Copyright © <span id="currentYear"></span> <a href="www.erikodev.my.id">ERIKODEV</a>. All rights reserved.</p>
                         <span>
                             <a href="#" class="text-gray m-r-15">Term &amp; Conditions</a>
                             <a href="#" class="text-gray">Privacy &amp; Policy</a>
@@ -218,6 +218,13 @@
     <!-- Core JS -->
     <script src="{{ url_for('static', filename='assets/js/app.min.js') }}"></script>
 
+    <script>
+        // Get the current year
+        var currentYear = new Date().getFullYear();
+    
+        // Set the current year in the footer
+        document.getElementById("currentYear").textContent = currentYear;
+    </script>
 </body>
 
 </html>

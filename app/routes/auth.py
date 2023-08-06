@@ -11,9 +11,7 @@ def login():
         return redirect(url_for('project.index'))
     if request.method == 'POST':
         email = request.form['email']
-        print("email", email)
         password = request.form['password']
-        print("password", password)
 
         user = User.query.filter_by(email=email).first()
 
@@ -21,7 +19,6 @@ def login():
             session['email'] = email
             session['name'] = user.name
             session['institute'] = user.institute
-            flash('Login successful!', 'success')
             return redirect(url_for('project.index'))
 
         flash('Incorrect email or password. Please try again.', 'error')
@@ -60,4 +57,5 @@ def register():
 @auth_bp.route('/logout')
 def logout():
     session.pop('email', None)  # Menghapus session 'email'
+    flash('Logout successful!', 'success')
     return redirect(url_for('auth.login')) 
